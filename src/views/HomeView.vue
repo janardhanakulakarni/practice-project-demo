@@ -1,6 +1,6 @@
 <template>
   <div style="padding: 0">
-    Hello this is home page
+    Hello this is home page, welcome 
   </div>
 </template>
 
