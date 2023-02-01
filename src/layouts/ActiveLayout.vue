@@ -1,6 +1,6 @@
 <template>
-  <v-app id="app" style="background-color: #cccccc">
-    <!-- <v-navigation-drawer
+  <div>
+    <v-navigation-drawer
       v-model="drawer"
       app
       width="350"
@@ -22,7 +22,8 @@
         <v-list-item
           v-for="child in item.items"
           :key="child.title"
-          @click="onclicksuboption(child.id)"
+          :to="child.to"
+          @click="drawer = false"
         >
         <v-list-item-icon>
             <v-icon v-text="'mdi-hand-pointing-right'"></v-icon>
@@ -55,9 +56,11 @@
           <span class="footer-content" style="top: 3px"><strong>All rights reserved @2023</strong></span>
         </v-col>
       </v-row>
-    </v-footer> -->
+    </v-footer>
+    <v-main>
       <router-view/>
-  </v-app>
+    </v-main>
+  </div>
 </template>
 
 <script>
@@ -65,54 +68,47 @@
 export default {
   name: 'App',
   data: () => ({
-  //   drawer: false,
-  //     items: [
-  //       {
-  //         action: 'mdi-home',
-  //         items: [],
-  //         title: 'HOME',
-  //       },
-  //       {
-  //         action: 'mdi-shield-account-variant',
-  //         items: [{ title: 'Create User', id: 'createUser' }, { title: 'Delete User' }],
-  //         title: 'ADMIN',
-  //       },
-  //       {
-  //         action: 'mdi-account-group',
-  //         active: true,
-  //         items: [],
-  //         title: 'STAF MANAGEMENT',
-  //       },
-  //       {
-  //         action: 'mdi-account',
-  //         items: [],
-  //         title: 'STUDENT MANAGEMENT',
-  //       },
-  //       {
-  //         action: 'mdi-account-card',
-  //         items: [],
-  //         title: 'ACCOUNT SECTION',
-  //       },
-  //       {
-  //         action: 'mdi-cradle',
-  //         items: [],
-  //         title: 'LEAVE MANAGEMENT',
-  //       },
-  //       {
-  //         action: 'mdi-cog',
-  //         items: [{ title: 'Logout', to: '/login' }, { title: 'Terms & Conditions' }],
-  //         title: 'SETTINGS',
-  //       },
-  //     ],
-   }),
-  // created() {
-  //   localStorage.setItem('username', 'admin@gmail.com');
-  //   localStorage.setItem('password', '1234567890');
-  // },
-  // methods: {
-  //   onclicksuboption(val) {
-  //     console.log(val);
-  //   }
-  // }
+    drawer: false,
+      items: [
+        {
+          action: 'mdi-home',
+          items: [],
+          title: 'HOME',
+        },
+        {
+          action: 'mdi-shield-account-variant',
+          items: [{ title: 'Create User', to: 'createUser' }, { title: 'Delete User' }],
+          title: 'ADMIN',
+        },
+        {
+          action: 'mdi-account-group',
+          active: true,
+          items: [{ title: 'Create User', to: 'createUser' }, { title: 'Edit User Details' }],
+          title: 'STAF MANAGEMENT',
+        },
+        {
+          action: 'mdi-account',
+          items: [{ title: 'Enroll Student', to: 'studentEnroll' }, { title: 'Edit Student Details' }],
+          title: 'STUDENT MANAGEMENT',
+        },
+        {
+          action: 'mdi-account-card',
+          items: [],
+          title: 'ACCOUNT SECTION',
+        },
+        {
+          action: 'mdi-cradle',
+          items: [],
+          title: 'LEAVE MANAGEMENT',
+        },
+        {
+          action: 'mdi-cog',
+          items: [{ title: 'Logout', to: '/login' }, { title: 'Terms & Conditions' }],
+          title: 'SETTINGS',
+        },
+      ],
+  }),
+  methods: {
+  }
 }
 </script>
