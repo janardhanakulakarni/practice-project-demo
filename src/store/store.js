@@ -36,10 +36,12 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import StudentEnrollModule from './modules/StudentEnrollModule'
 import UserCreationModule from './modules/UserCreationModule'
+import UserAuth from './modules/UserAuth'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
     modules: {
+        UserAuth: UserAuth,
         StudentEnrollModule: StudentEnrollModule,
         UserCreationModule: UserCreationModule
     }

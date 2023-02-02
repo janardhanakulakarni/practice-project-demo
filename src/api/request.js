@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const baseURL = "http://jsonplaceholder.typicode.com";
+const baseURL = "https://hippo-nightgown.cyclic.app/api";
 const contentType = {
     json: 'application/json',
     form: 'multipart/form-data',
@@ -26,7 +26,7 @@ const axiosInstance = axios.create({
 
 const request = {
     get: (url, param) => axiosInstance.get(url, { param }),
-    post: (url, body) => axiosInstance.get(url, { body }),
+    post: (url, body) => axiosInstance.post(url, body),
     put: (url, body) => axiosInstance.get(url, { body }),
     patch: (url, body) => axiosInstance.get(url, { body }),
     del: url => axiosInstance.get(url),

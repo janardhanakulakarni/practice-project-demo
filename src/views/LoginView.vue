@@ -107,6 +107,7 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
   export default {
     name: 'LoginPage',
     data: () =>({
@@ -129,14 +130,15 @@
       ]
     }),
     methods: {
-      onClickLogin() {
+      ...mapActions('UserAuth', ['accountLogin']),
+      async onClickLogin() {
         if ((this.$refs.loginForm).validate()) {
           console.log(this.login);
-          if (localStorage.getItem('username') === this.login.email && localStorage.getItem('password') === this.login.password) {
-            this.$router.push('/user/about');
-          } else {
-            this.loginErr = true;
+          const req = {
+            email: 'skilldatatechnologies@gmail.com',
+            password: '$2a$12$rTVL20N1a7h7cWV04maKtOeUPFVlIIlSnSDdrWSwKjPdQACb3ue3m'
           }
+          await this.accountLogin(req) 
         } 
       }
     },
