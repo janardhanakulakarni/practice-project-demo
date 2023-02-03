@@ -5,6 +5,13 @@
                 <!-- <div class="label-text">Department</div> -->
                 <v-form ref="firstNameForm" v-model="valid" lazy-validation @submit.prevent="compltedFirstStep">
                     <v-row>
+                        <!-- <img style="height: 20vh; width: 10vw" :src="url" alt=""
+                        />
+                        <input 
+                            type="file"
+                            ref="myFile"
+                            @input="uploadFile"
+                        />  -->
                         <v-col cols="3">
                             <v-select
                                 :items="titles"
@@ -14,6 +21,7 @@
                                 item-value="id"
                                 item-text="name"
                                 :rules="titleRules"
+                                @change="clickedTitle"
                                 solo
                             ></v-select>
                         </v-col>
@@ -190,207 +198,22 @@
 </style>
 <script>
 import { mapActions, mapGetters } from 'vuex'
+import { storage } from './../firebase'
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
+
 export default {
     name: 'GeneralDetails',
     data: () => ({
-        departments: [
-            {
-                id: 1,
-                name: 'Civil Engineering'
-            },
-            {
-                id: 2,
-                name: 'Computer Science Engineering'
-            },
-            {
-                id: 3,
-                name: 'Electrial & Electronics Engineering'
-            },
-            {
-                id: 4,
-                name: 'Electronics & Communication Engineering'
-            },
-            {
-                id: 5,
-                name: 'Information Science Engineering'
-            },
-            {
-                id: 6,
-                name: 'Mechanical Engineering'
-            },
-        ],
-        nationality: [
-            {
-                id: 1,
-                name: 'India'
-            },
-            {
-                id: 'OTHER',
-                name: 'Other'
-            }
-        ],
-        religions: [
-            {
-                id: 1,
-                name: 'Buddhist'
-            },
-            {
-                id: 2,
-                name: 'Christian'
-            },
-            {
-                id: 3,
-                name: 'Hindu'
-            },
-            {
-                id: 4,
-                name: 'Islamic'
-            },
-            {
-                id: 5,
-                name: 'Jain'
-            },
-            {
-                id: 6,
-                name: 'Parsi'
-            },
-            {
-                id: 7,
-                name: 'Sikh'
-            },
-            {
-                id: 8,
-                name: 'Other'
-            },
-        ],
-        socialCategories: [
-            {
-                id: 1,
-                name: 'General'
-            },
-            {
-                id: 2,
-                name: 'OBC'
-            },
-            {
-                id: 3,
-                name: 'SC'
-            },
-            {
-                id: 4,
-                name: 'ST'
-            }
-        ],
-        obcSubCat: [
-            {
-                id: 1,
-                name: 'Category 1'
-            },
-            {
-                id: 2,
-                name: 'Category 2A'
-            },
-            {
-                id: 3,
-                name: 'Category 2B'
-            },
-            {
-                id: 4,
-                name: 'Category 3A'
-            },
-            {
-                id: 5,
-                name: 'Category 3B'
-            }
-        ],
-        genders: [
-            {
-                id: 1,
-                name: 'Male'
-            },
-            {
-                id: 2,
-                name: 'Female'
-            },
-            {
-                id: 3,
-                name: 'Transgender'
-            }
-        ],
-        roles: [
-            {
-                id: 1,
-                name: 'Admin'
-            },
-            {
-                id: 2,
-                name: 'HOD (Head of the deparment)'
-            },
-            {
-                id: 3,
-                name: 'Teaching Staff'
-            },
-            {
-                id: 4,
-                name: 'Accountent'
-            },
-            {
-                id: 5,
-                name: 'Hostel HM'
-            }
-        ],
-        titles: [
-            {
-                id: 1,
-                name: 'Mr.'
-            },
-            {
-                id: 2,
-                name: 'Mrs.'
-            },
-            {
-                id: 3,
-                name: 'Miss'
-            },
-            {
-                id: 4,
-                name: 'Dr.'
-            },
-            {
-                id: 5,
-                name: 'Prof.'
-            },
-        ],
-        qualifications: [
-            {
-                id: 1,
-                name: 'Phd'
-            },
-            {
-                id: 2,
-                name: 'Mtech'
-            },
-            {
-                id: 3,
-                name: 'B.E'
-            },
-            {
-                id: 4,
-                name: 'MCA'
-            },
-            {
-                id: 5,
-                name: 'MSc'
-            },
-            {
-                id: 6,
-                name: 'MBA'
-            },
-            {
-                id: 7,
-                name: 'M.Phil'
-            },
-        ],
+        url: '',
+        departments: [],
+        nationality: [],
+        religions: [],
+        socialCategories: [],
+        obcSubCat: [ ],
+        genders: [],
+        roles: [],
+        titles: [],
+        qualifications: [],
         generalDetails: {
             selecetdDepartment: '',
             selectedTitle: '',
@@ -429,7 +252,50 @@ export default {
         ...mapGetters('UserCreationModule', ['getUserGeneralDetails'])
     },
     methods: {
-        ...mapActions('UserCreationModule', ['saveUserGeneralDetail']),
+        ...mapActions('UserCreationModule', ['getDropDownVals', 'saveUserGeneralDetail']),
+        async getAllDropDownVals() {
+           const data = await this.getDropDownVals();
+           const arrList = ['dept', 'gender', 'nationality', 'obcsub', 'quali', 'religion', 'role', 'social', 'title'];
+           arrList.forEach((item) => {
+                if (item === 'dept') this.setDropDown(data.data.department, this.departments);
+                else if (item === 'gender') this.setDropDown(data.data.gender, this.genders);
+                else if (item === 'nationality') this.setDropDown(data.data.nationality, this.nationality);
+                else if (item === 'obcsub') this.setDropDown(data.data.obcsubcategory, this.obcSubCat);
+                else if (item === 'quali') this.setDropDown(data.data.qualification, this.qualifications);
+                else if (item === 'religion') this.setDropDown(data.data.religion, this.religions);
+                else if (item === 'role') this.setDropDown(data.data.role, this.roles);
+                else if (item === 'social') this.setDropDown(data.data.socialcategory, this.socialCategories);
+                else if (item === 'title') this.setDropDown(data.data.title, this.titles);
+           });
+        },
+        setDropDown(arr, arrName) {
+            arr.forEach((item) => {
+                const obj = {
+                    id: item.code,
+                    name: item.value
+                }
+                arrName.push(obj);
+            })
+        },
+        uploadFile() {
+            console.log(this.$refs.myFile.files);
+            // const ext = this.$refs.myFile.files[0].name.split('.');
+            const storageRef = ref(storage, `userProfile/emailofuser`);
+            uploadBytes(storageRef, this.$refs.myFile.files[0]).then(
+                (snapshot) => {
+                    console.log('uplaoded', snapshot);
+                }
+            )
+            setTimeout(() => {
+                this.getProfilePic()
+            }, 2000);
+        },
+        getProfilePic() {
+            console.log('calling get');
+            getDownloadURL(ref(storage, `userProfile/emailofuser`)).then(
+                (download_url) => this.url = download_url
+            )
+        },
         onChangeSocialCat() {
             this.generalDetails.selectedObcSub = '';
             if (this.generalDetails.selectedSocialCategory === 2) this.showObcSubCat = true;
@@ -452,10 +318,14 @@ export default {
                     this.$emit('onClickContinue');
                 }
             }
+        },
+        clickedTitle() {
+            console.log(this.generalDetails.selectedTitle)
         }
     },
     mounted() {
         this.generalDetails = this.getUserGeneralDetails;
+        this.getAllDropDownVals();
     }
 }
 </script>

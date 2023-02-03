@@ -1,3 +1,4 @@
+import axiosrequest from '@/api'
 const state = {    
     generalDetails: {
         selecetdDepartment: '',
@@ -49,6 +50,14 @@ const getters = {
 };
 
 const actions = { 
+    async getDropDownVals(nameOfScreen) {
+        const payload = {
+            screenName: nameOfScreen
+        }
+        const { data } = await axiosrequest.get('/users/getData', payload)
+        console.log(data);
+        return data;
+    },
     async saveUserGeneralDetail({commit}, request){
         const payload = {
             detailType: 'general',

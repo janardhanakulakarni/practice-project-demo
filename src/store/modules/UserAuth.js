@@ -9,8 +9,9 @@ const getters = {
 const actions = { 
     async accountLogin({commit}, request){
         console.log(commit);
-        const data = await axiosrequest.post('/auth/login', request)
+        const { data } = await axiosrequest.post('/auth/login', request)
         console.log('printing data', data);
+        localStorage.setItem('token', data.access_token);
     },
 };
 
