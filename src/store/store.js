@@ -37,12 +37,14 @@ import Vuex from 'vuex'
 import StudentEnrollModule from './modules/StudentEnrollModule'
 import UserCreationModule from './modules/UserCreationModule'
 import UserAuth from './modules/UserAuth'
+import FileUpload  from './modules/FileUpload'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
     modules: {
         UserAuth: UserAuth,
         StudentEnrollModule: StudentEnrollModule,
-        UserCreationModule: UserCreationModule
+        UserCreationModule: UserCreationModule,
+        FileUpload: FileUpload
     }
 })

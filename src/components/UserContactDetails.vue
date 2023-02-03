@@ -14,16 +14,8 @@
                     ></v-textarea>
                     <v-text-field
                         class="mt-2"
-                        label="Student mobile number"
+                        label="User mobile number"
                         v-model="address.residentailAddress.userPhNum"
-                        single-line
-                        solo
-                        :rules="fieldRules"
-                    ></v-text-field>
-                    <v-text-field
-                        class="mt-2"
-                        label="Student Email-id"
-                        v-model="address.residentailAddress.userEmailId"
                         single-line
                         solo
                         :rules="fieldRules"
@@ -80,17 +72,8 @@
                     ></v-textarea>
                     <v-text-field
                         class="mt-2"
-                        label="Student mobile number"
+                        label="User mobile number"
                         v-model="address.permanentAddress.userPhNum"
-                        single-line
-                        solo
-                        :disabled="disableField"
-                        :rules="fieldRules"
-                    ></v-text-field>
-                    <v-text-field
-                        class="mt-2"
-                        label="Student Email-id"
-                        v-model="address.permanentAddress.userEmailId"
                         single-line
                         solo
                         :disabled="disableField"
@@ -172,33 +155,24 @@ export default {
                 name: 'Dharwad'
             }
         ],
-        states: [
-            {
-                id: 1,
-                name: 'Karnataka'
-            },
-            {
-                id: 2,
-                name: 'Andhra Pradesh'
-            }
-        ],
+        states: [],
         address: {
             residentailAddress: {
                 address: '',
-                userEmailId: '',
                 userPhNum: '',
                 city: '',
                 selectedDistrict: '',
                 selectedState: '',
+                state: '',
                 zipcode: ''
             },
             permanentAddress: {
                 address: '',
-                userEmailId: '',
                 userPhNum: '',
                 city: '',
                 selectedDistrict: '',
                 selectedState: '',
+                state: '',
                 zipcode: ''
             },
         },
@@ -214,10 +188,17 @@ export default {
         ],
     }),
     computed: {
-        ...mapGetters('UserCreationModule', ['getUserContactDetails'])
+        ...mapGetters('UserCreationModule', ['getUserContactDetails', 'getUserDropDownValues'])
     },
     methods: {
         ...mapActions('UserCreationModule', ['saveUserContactDetail']),
+        async setDropDownVals() {
+            const arrList = ['state'];
+            const data = this.getUserDropDownValues;
+            arrList.forEach((name) => {
+                if(name === 'state') this.states = data[name];
+            });
+        },
         async compltedSecondStep() {
             if (this.$refs.firstCol.validate() && this.$refs.secondCol.validate()) {
                 await this.saveUserContactDetail(this.address);
@@ -242,6 +223,7 @@ export default {
     mounted() {
         this.address.residentailAddress = this.getUserContactDetails['residentailAddress'];
         this.address.permanentAddress = this.getUserContactDetails['permanentAddress'];
+        this.setDropDownVals();
     }
 }
 </script>

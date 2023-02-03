@@ -6,11 +6,11 @@
                 <v-form ref="firstNameForm" v-model="valid" lazy-validation @submit.prevent="compltedFirstStep">
                     <v-row>
                         <!-- <img style="height: 20vh; width: 10vw" :src="url" alt=""
-                        />
-                        <input 
+                        /> -->
+                        <!-- <input 
                             type="file"
                             ref="myFile"
-                            @input="uploadFile"
+                            @input="uploadProfilePic"
                         />  -->
                         <v-col cols="3">
                             <v-select
@@ -21,8 +21,8 @@
                                 item-value="id"
                                 item-text="name"
                                 :rules="titleRules"
-                                @change="clickedTitle"
                                 solo
+                                @change="onChangeTitle"
                             ></v-select>
                         </v-col>
                         <v-col cols="9">
@@ -44,6 +44,7 @@
                         item-value="id"
                         :rules="selectRules"
                         item-text="name"
+                        @change="onChangeGender"
                         solo
                     ></v-select>
                     <v-select
@@ -56,6 +57,7 @@
                         item-text="name"
                         solo
                         :rules="selectRules"
+                        @change="onChangeRole"
                     ></v-select>
                     <v-select
                         class="mt-3"
@@ -66,6 +68,7 @@
                         :menu-props="{ top: false, offsetY: true }"
                         item-value="id"
                         item-text="name"
+                        @change="onChangeReligion"
                         solo
                     ></v-select>
                     <v-text-field
@@ -100,11 +103,12 @@
                         :class="[ showDOBerr ? 'mt-4' : 'mt-10']"
                         :items="departments"
                         label="Department"
-                        v-model="generalDetails.selecetdDepartment"
+                        v-model="generalDetails.selectedDepartment"
                         :menu-props="{ top: false, offsetY: true }"
                         :rules="selectRules"
                         item-value="id"
                         item-text="name"
+                        @change="onChangeDept"
                         solo
                     ></v-select>
                     <v-select
@@ -139,6 +143,17 @@
                     ></v-text-field>
                     <v-select
                         class="mt-3"
+                        :items="maritalStatus"
+                        label="Marital Status"
+                        v-model="generalDetails.selectedMaritalStatus"
+                        :menu-props="{ top: false, offsetY: true }"
+                        item-value="id"
+                        item-text="name"
+                        @change="onChangeMariage"
+                        solo
+                    ></v-select>
+                    <v-select
+                        class="mt-3"
                         :items="qualifications"
                         label="Qualification"
                         v-model="generalDetails.selectedQualification"
@@ -146,6 +161,7 @@
                         item-value="id"
                         :rules="selectRules"
                         item-text="name"
+                        @change="onChangeQuali"
                         solo
                     ></v-select>
                     <v-select
@@ -156,6 +172,7 @@
                         :menu-props="{ top: false, offsetY: true }"
                         item-value="id"
                         item-text="name"
+                        @change="onChangeNation"
                         :rules="selectRules"
                         solo
                     ></v-select>
@@ -169,6 +186,7 @@
                         item-value="id"
                         item-text="name"
                         :rules="selectRules"
+                        @change="onChangeObcSub"
                         solo
                     ></v-select>
                 </v-form>
@@ -197,10 +215,8 @@
 }
 </style>
 <script>
+/* eslint-disable */
 import { mapActions, mapGetters } from 'vuex'
-import { storage } from './../firebase'
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
-
 export default {
     name: 'GeneralDetails',
     data: () => ({
@@ -209,25 +225,38 @@ export default {
         nationality: [],
         religions: [],
         socialCategories: [],
-        obcSubCat: [ ],
+        obcSubCat: [],
+        maritalStatus: [],
         genders: [],
         roles: [],
         titles: [],
         qualifications: [],
         generalDetails: {
-            selecetdDepartment: '',
+            selectedQualification: '',
+            qualification: '',
+            selectedDepartment: '',
+            department: '',
+            selectedMaritalStatus: '',
+            mariageStatus: '',
             selectedTitle: '',
+            title: '',
             selectedRole: '',
+            role: '',
             firstName: '',
             middleName: '',
             lastName: '',
             selectedGender: '',
+            gender: '',
             dob: '',
             formattedDOB: '',
             selectedNation: '',
+            nation: '',
             selectedReligion: '',
+            religion: '',
             selectedSocialCategory: '',
+            socialCategory: '',
             selectedObcSub: '',
+            obcSub: '',
             userEmail: '',
             password: ''
         },
@@ -249,57 +278,100 @@ export default {
         ]
     }),
     computed: {
-        ...mapGetters('UserCreationModule', ['getUserGeneralDetails'])
+        ...mapGetters('UserCreationModule', ['getUserGeneralDetails', 'getDropDownCompletedVal', 'getUserDropDownValues'])
+    },
+    watch: {
+        getDropDownCompletedVal(newVal) {
+            if(newVal) {
+                this.setAllDropDownVals();
+            }
+        }
     },
     methods: {
-        ...mapActions('UserCreationModule', ['getDropDownVals', 'saveUserGeneralDetail']),
-        async getAllDropDownVals() {
-           const data = await this.getDropDownVals();
-           const arrList = ['dept', 'gender', 'nationality', 'obcsub', 'quali', 'religion', 'role', 'social', 'title'];
-           arrList.forEach((item) => {
-                if (item === 'dept') this.setDropDown(data.data.department, this.departments);
-                else if (item === 'gender') this.setDropDown(data.data.gender, this.genders);
-                else if (item === 'nationality') this.setDropDown(data.data.nationality, this.nationality);
-                else if (item === 'obcsub') this.setDropDown(data.data.obcsubcategory, this.obcSubCat);
-                else if (item === 'quali') this.setDropDown(data.data.qualification, this.qualifications);
-                else if (item === 'religion') this.setDropDown(data.data.religion, this.religions);
-                else if (item === 'role') this.setDropDown(data.data.role, this.roles);
-                else if (item === 'social') this.setDropDown(data.data.socialcategory, this.socialCategories);
-                else if (item === 'title') this.setDropDown(data.data.title, this.titles);
-           });
-        },
-        setDropDown(arr, arrName) {
-            arr.forEach((item) => {
-                const obj = {
-                    id: item.code,
-                    name: item.value
-                }
-                arrName.push(obj);
+        ...mapActions('UserCreationModule', ['saveUserGeneralDetail']),
+        ...mapActions('FileUpload', ['uploadFile', 'getFile']),
+        setAllDropDownVals() {
+            const arrList = ['dept', 'gender', 'nationality', 'maritalStatus', 'obcsub', 'quali', 'religion', 'role', 'social', 'title'];
+            const data = this.getUserDropDownValues;
+            arrList.forEach((name) => {
+                if (name === 'dept') this.departments = data[name];
+                else if (name === 'gender') this.genders = data[name];
+                else if (name === 'nationality') this.nationality = data[name];
+                else if (name === 'obcsub') this.obcSubCat = data[name];
+                else if (name === 'quali') this.qualifications = data[name];
+                else if (name === 'maritalStatus') this.maritalStatus = data[name];
+                else if (name === 'religion') this.religions = data[name];
+                else if (name === 'role') this.roles = data[name];
+                else if (name === 'social') this.socialCategories = data[name];
+                else if (name === 'title')this.titles = data[name];
             })
         },
-        uploadFile() {
-            console.log(this.$refs.myFile.files);
-            // const ext = this.$refs.myFile.files[0].name.split('.');
-            const storageRef = ref(storage, `userProfile/emailofuser`);
-            uploadBytes(storageRef, this.$refs.myFile.files[0]).then(
-                (snapshot) => {
-                    console.log('uplaoded', snapshot);
-                }
-            )
-            setTimeout(() => {
-                this.getProfilePic()
-            }, 2000);
+        onChangeDept() {
+            this.departments.forEach((item) => {
+                if (this.selectedDepartment === item.id) this.generalDetails.department = item.name
+            })
         },
-        getProfilePic() {
-            console.log('calling get');
-            getDownloadURL(ref(storage, `userProfile/emailofuser`)).then(
-                (download_url) => this.url = download_url
-            )
+        onChangeMariage() {
+            this.maritalStatus.forEach((item) => {
+                if (this.selectedMaritalStatus === item.id) this.generalDetails.mariageStatus = item.name
+            })
+        },
+        onChangeTitle() {
+            this.titles.forEach((item) => {
+                if (this.selectedTitle === item.id) this.generalDetails.title = item.name
+            })
+        },
+        onChangeRole() {
+            this.roles.forEach((item) => {
+                if (this.selectedRole === item.id) this.generalDetails.role = item.name
+            })
+        },
+        onChangeGender() {
+            this.genders.forEach((item) => {
+                if (this.selectedGender === item.id) this.generalDetails.gender = item.name
+            })
+        },
+        onChangeQuali() {
+            this.qualifications((item) => {
+                if (this.selectedQualification === item.id) this.generalDetails.qualification = item.name;
+            })  
+        },
+        onChangeNation() {
+            this.nationality.forEach((item) => {
+                if (this.selectedNation === item.id) this.generalDetails.nation = item.name
+            })
+        },
+        onChangeReligion() {
+            this.religions.forEach((item) => {
+                if (this.selectedReligion === item.id) this.generalDetails.religion = item.name
+            })
+        },
+        onChangeObcSub() {
+            this.obcSubCat.forEach((item) => {
+                if (this.selectedObcSub === item.id) this.generalDetails.obcSub = item.name
+            })
+        },
+        uploadProfilePic() {
+            console.log(this.$refs.myFile.files);
+            const req = {
+                fileBlob: this.$refs.myFile.files[0],
+                folderAndName: 'userProfile/emailofuser'
+            };
+            this.uploadFile(req)
+        },
+        async getProfilePic() {
+            const req = {
+                folderAndName: 'userProfile/emailofuser'
+            }
+            const profileUrl = await this.getFile(req);
         },
         onChangeSocialCat() {
             this.generalDetails.selectedObcSub = '';
             if (this.generalDetails.selectedSocialCategory === 2) this.showObcSubCat = true;
             else this.showObcSubCat = false;
+            this.socialCategories.forEach((item) => {
+                if (this.selectedSocialCategory === item.id) this.generalDetails.socialCategory = item.name
+            })
         },
         onSelectDate() {
             this.showDOBerr = false;
@@ -319,13 +391,9 @@ export default {
                 }
             }
         },
-        clickedTitle() {
-            console.log(this.generalDetails.selectedTitle)
-        }
     },
     mounted() {
         this.generalDetails = this.getUserGeneralDetails;
-        this.getAllDropDownVals();
     }
 }
 </script>

@@ -1,46 +1,90 @@
+/* eslint-disable */
 import axiosrequest from '@/api'
-const state = {    
+const state = {
+    departments: [],
+    nationality: [],
+    religions: [],
+    socialCategories: [],
+    obcSubCat: [],
+    genders: [],
+    maritalStatus: [],
+    roles: [],
+    titles: [],
+    qualifications: [],
+    states: [],
+    isDropdownSetupCompleted: false,
     generalDetails: {
-        selecetdDepartment: '',
+        selectedQualification: '',
+        qualification: '',
+        selectedDepartment: '',
+        department: '',
+        selectedMaritalStatus: '',
+        mariageStatus: '',
         selectedTitle: '',
+        title: '',
         selectedRole: '',
+        role: '',
         firstName: '',
         middleName: '',
         lastName: '',
         selectedGender: '',
+        gender: '',
         dob: '',
         formattedDOB: '',
         selectedNation: '',
+        nation: '',
         selectedReligion: '',
+        religion: '',
         selectedSocialCategory: '',
+        socialCategory: '',
         selectedObcSub: '',
+        obcSub: '',
         userEmail: '',
         password: ''
     },
     contactDetails: {
         residentailAddress: {
             address: '',
-            userEmailId: '',
             userPhNum: '',
             city: '',
             selectedDistrict: '',
             selectedState: '',
+            state: '',
             zipcode: ''
         },
         permanentAddress: {
             address: '',
-            userEmailId: '',
             userPhNum: '',
             city: '',
             selectedDistrict: '',
             selectedState: '',
+            state: '',
             zipcode: ''
         },
     },
     finalDetails: {},
 };
 
-const getters = {  
+const getters = {
+    getUserDropDownValues: (state) => {
+        const obj = {
+            'dept': state.departments,
+            'gender': state.genders,
+            'nationality': state.nationality,
+            'obcsub': state.obcSubCat,
+            'quali': state.qualifications,
+            'maritalStatus': state.maritalStatus,
+            'religion': state.religions, 
+            'role': state.roles, 
+            'social': state.socialCategories, 
+            'title': state.titles,
+            'state': state.states
+        }
+        return obj;
+    },
+    getDropDownCompletedVal: (state) => {
+        return state.isDropdownSetupCompleted;
+    },
     getUserGeneralDetails: (state) => {
         return state.generalDetails;
     },
@@ -57,6 +101,12 @@ const actions = {
         const { data } = await axiosrequest.get('/users/getData', payload)
         console.log(data);
         return data;
+    },
+    async dispatchDropdown({commit}, payload) {
+        commit('setUserDropDownVal', payload);
+    },
+    async dropdownSetupCompleted({commit}) {
+        commit('setDropDownSetupCompleted');
     },
     async saveUserGeneralDetail({commit}, request){
         const payload = {
@@ -76,6 +126,23 @@ const actions = {
 };
 
 const mutations = {
+    setUserDropDownVal(state, payload) {
+        if (payload.name === 'dept') state.departments = payload.arr;
+        else if (payload.name === 'gender') state.genders = payload.arr;
+        else if (payload.name === 'nationality') state.nationality = payload.arr;
+        else if (payload.name === 'obcsub') state.obcSubCat = payload.arr;
+        else if (payload.name === 'quali') state.qualifications = payload.arr;
+        else if (payload.name === 'religion') state.religions = payload.arr;
+        else if (payload.name === 'maritalStatus') state.maritalStatus = payload.arr;
+        else if (payload.name === 'role') state.roles = payload.arr;
+        else if (payload.name === 'social') state.socialCategories = payload.arr;
+        else if (payload.name === 'state') state.states = payload.arr;
+        else if (payload.name === 'title')state.titles = payload.arr;
+
+    },
+    setDropDownSetupCompleted(state) {
+        state.isDropdownSetupCompleted = true;
+    },
     setUserDetail(state, payload) {
         if (payload.detailType === 'general') state.generalDetails = payload.data;
         if (payload.detailType === 'contact') {

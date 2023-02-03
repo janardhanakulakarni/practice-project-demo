@@ -108,8 +108,11 @@
 }
 </style>
 <script>
+/* eslint-disable */
+
 import UserGeneralDetails from './../components/UserGeneralDetails.vue'
 import UserContactDetails from './../components/UserContactDetails.vue'
+import { mapActions, mapGetters } from 'vuex'
 
 export default {
     components: {
@@ -125,15 +128,48 @@ export default {
         tabItems: [
           'General Details', 'Contact Details'
         ],
-        data: [
-            {
-                id: 1,
-                name: 'KAR'
-            }
-        ]
         // showWarning: false
     }),
+    computed: {
+        ...mapGetters('UserCreationModule', ['getUserGeneralDetails', 'getUserContactDetails'])
+    },
     methods: {
+        ...mapActions('UserCreationModule', ['getDropDownVals', 'dispatchDropdown', 'dropdownSetupCompleted']),
+        async getAllDropDownVals() {
+           const data = await this.getDropDownVals();
+           const arrList = ['dept', 'gender', 'nationality', 'maritalStatus', 'obcsub', 'quali', 'religion', 'role', 'social', 'title', 'state'];
+           arrList.forEach((item) => {
+                if (item === 'dept') this.setDropDown(data.data.department, 'dept');
+                else if (item === 'gender') this.setDropDown(data.data.gender, 'gender');
+                else if (item === 'nationality') this.setDropDown(data.data.nationality, 'nationality');
+                else if (item === 'obcsub') this.setDropDown(data.data.obcsubcategory, 'obcsub');
+                else if (item === 'maritalStatus') this.setDropDown(data.data.obcsubcategory, 'maritalStatus');
+                else if (item === 'quali') this.setDropDown(data.data.qualification, 'quali');
+                else if (item === 'religion') this.setDropDown(data.data.religion, 'religion');
+                else if (item === 'role') this.setDropDown(data.data.role, 'role');
+                else if (item === 'social') this.setDropDown(data.data.socialcategory, 'social');
+                else if (item === 'state') this.setDropDown(data.data.states, 'state');
+                else if (item === 'title') {
+                    this.setDropDown(data.data.title, 'title');
+                    this.dropdownSetupCompleted();
+                }
+           });
+        },
+        async setDropDown(arr, name) {
+            let dropDownArr = [];
+            arr.forEach((item) => {
+                const obj = {
+                    id: item.code,
+                    name: item.value
+                }
+                dropDownArr.push(obj);
+            })
+            const req = {
+                name: name,
+                arr: dropDownArr
+            }
+            await this.dispatchDropdown(req);
+        },
         onSelectType() {
             console.log(this.selectedUserType);
             if (this.selectedUserType === '') this.typeNotSelected =true;
@@ -147,11 +183,57 @@ export default {
             this.selectedTab -= 1;
         },
         createUserWithDetails() {
-            console.log('compelete data', this.data);
+            const genDetails = this.getUserGeneralDetails;
+            const contactDetails = this.getUserContactDetails
+            const requestBody = {
+                firstName: genDetails.firstName,
+                middleName: genDetails.middleName,
+                lastName: genDetails.lastName,
+                title: genDetails.selectedTitle,
+                titleCode: genDetails.titleCode,
+                userName: genDetails.userEmail,
+                gender: genDetails.selectedGender,
+                genderCode: genDetails.gender,
+                // contactNo: genDetails.contactDetails,
+                email: genDetails.userEmail,
+                // password: 'encryptedpassword',
+                role: genDetails.role,
+                roleCode: genDetails.selectedRole,
+                maritalStatus: genDetails.maritalStatus,
+                maritalStatusCode: genDetails.selectedMaritalStatus,
+                qualification: genDetails.qualification,
+                qualificationCode: genDetails.selectedQualification,
+                department: genDetails.department,
+                departmentCode: genDetails.selectedDepartment,
+                nationality: genDetails.nation,
+                religion: genDetails.religion,
+                religionCode: genDetails.selectedReligion,
+                socialCategory: genDetails.socialCategory,
+                socialCategoryCode: genDetails.selectedSocialCategory,
+                obcSubCategory: genDetails.selectedObcSub,
+                obcSubCategory: genDetails.obcSub,
+                residentialAddress: {
+                    address: contactDetails.residentialAddress.address,
+                    state: contactDetails.residentailAddress.state,
+                    stateRef: contactDetails.residentailAddress.selectedState,
+                    district: contactDetails.residentailAddress.selectedDistrict,
+                    city: contactDetails.residentailAddress.city,
+                    zipCode: contactDetails.residentailAddress.zipcode
+                },
+                permanentAddress: {
+                    address: contactDetails.permanentAddress.address,
+                    state: contactDetails.permanentAddress.state,
+                    stateRef: contactDetails.permanentAddress.selectedState,
+                    district: contactDetails.permanentAddress.selectedDistrict,
+                    city: contactDetails.permanentAddress.city,
+                    zipCode: contactDetails.permanentAddress.zipcode
+                }
+            }
+            console.log('final data to sendto api', requestBody);
         }
     },
     mounted() {
-        console.log(this.data)
+        this.getAllDropDownVals();
     }
 }
 </script>
