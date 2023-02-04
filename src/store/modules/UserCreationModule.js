@@ -43,11 +43,12 @@ const state = {
         password: ''
     },
     contactDetails: {
-        residentailAddress: {
+        residentialAddress: {
             address: '',
             userPhNum: '',
             city: '',
             selectedDistrict: '',
+            district: '',
             selectedState: '',
             state: '',
             zipcode: ''
@@ -57,6 +58,7 @@ const state = {
             userPhNum: '',
             city: '',
             selectedDistrict: '',
+            district: '',
             selectedState: '',
             state: '',
             zipcode: ''
@@ -90,7 +92,7 @@ const getters = {
     },
     getUserContactDetails: (state) => {
         return state.contactDetails;
-    },
+    }
 };
 
 const actions = { 
@@ -123,6 +125,11 @@ const actions = {
         } 
         commit('setUserDetail', payload)
     },
+    async registerUser({commit}, payload) {
+        const data = await axiosrequest.post('/auth/register', payload)
+        console.log(data.json());
+        return data;
+    }
 };
 
 const mutations = {
@@ -146,7 +153,7 @@ const mutations = {
     setUserDetail(state, payload) {
         if (payload.detailType === 'general') state.generalDetails = payload.data;
         if (payload.detailType === 'contact') {
-            state.contactDetails['residentailAddress'] = payload.data['residentailAddress'];
+            state.contactDetails['residentialAddress'] = payload.data['residentialAddress'];
             state.contactDetails['permanentAddress'] = payload.data['permanentAddress'];
         }
     }

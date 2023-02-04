@@ -8,14 +8,14 @@
                         solo
                         name="input-7-4"
                         label="Residentail Address"
-                        v-model="address.residentailAddress.address"
+                        v-model="address.residentialAddress.address"
                         :rules="fieldRules"
                         rows="3"
                     ></v-textarea>
                     <v-text-field
                         class="mt-2"
                         label="User mobile number"
-                        v-model="address.residentailAddress.userPhNum"
+                        v-model="address.residentialAddress.userPhNum"
                         single-line
                         solo
                         :rules="fieldRules"
@@ -23,36 +23,46 @@
                     <v-text-field
                         class="mt-2"
                         label="City"
-                        v-model="address.residentailAddress.city"
+                        v-model="address.residentialAddress.city"
                         single-line
                         :rules="fieldRules"
                         solo
                     ></v-text-field>
                     <v-select
                         class="mt-2"
-                        :items="districts"
-                        label="District"
-                        v-model="address.residentailAddress.selectedDistrict"
+                        :items="states"
+                        label="State"
+                        v-model="address.residentialAddress.selectedState"
                         :menu-props="{ top: false, offsetY: true }"
                         item-value="id"
                         item-text="name"
                         solo
                         :rules="selectRules"
+                        @change="onSelectState('resAdd')"
                     ></v-select>
                     <v-select
                         class="mt-2"
-                        :items="states"
-                        label="State"
-                        v-model="address.residentailAddress.selectedState"
+                        :items="districts"
+                        label="District"
+                        v-model="address.residentialAddress.selectedDistrict"
                         :menu-props="{ top: false, offsetY: true }"
                         item-value="id"
                         item-text="name"
                         solo
                         :rules="selectRules"
+                        @change="onSelectDistrict('resAdd')"
                     ></v-select>
+                    <v-text-field
+                        solo
+                        name="input-7-4"
+                        label="Zipcode"
+                        v-model="address.residentialAddress.zipcode"
+                        :rules="fieldRules"
+                        rows="3"
+                    ></v-text-field>
                 </v-form>
                 <v-checkbox
-                    class="mt-n4"
+                    class="mt-n2"
                     v-model="sameAddress"
                     label="Set Reseidential Address as Permanent Address"
                     @change="makeDefaultAddress"
@@ -90,18 +100,6 @@
                     ></v-text-field>
                     <v-select
                         class="mt-2"
-                        :items="districts"
-                        label="District"
-                        v-model="address.permanentAddress.selectedDistrict"
-                        :menu-props="{ top: false, offsetY: true }"
-                        item-value="id"
-                        item-text="name"
-                        solo
-                        :disabled="disableField"
-                        :rules="selectRules"
-                    ></v-select>
-                    <v-select
-                        class="mt-2"
                         :items="states"
                         label="State"
                         v-model="address.permanentAddress.selectedState"
@@ -111,7 +109,29 @@
                         solo
                         :disabled="disableField"
                         :rules="selectRules"
+                        @change="onSelectState('perAdd')"
                     ></v-select>
+                    <v-select
+                        class="mt-2"
+                        :items="districts"
+                        label="District"
+                        v-model="address.permanentAddress.selectedDistrict"
+                        :menu-props="{ top: false, offsetY: true }"
+                        item-value="id"
+                        item-text="name"
+                        solo
+                        :disabled="disableField"
+                        :rules="selectRules"
+                        @change="onSelectDistrict('perAdd')"
+                    ></v-select>
+                    <v-text-field
+                        solo
+                        name="input-7-4"
+                        label="Zipcode"
+                        v-model="address.permanentAddress.zipcode"
+                        :rules="fieldRules"
+                        rows="3"
+                    ></v-text-field>
                 </v-form>
             </v-col>
         </v-row>
@@ -145,23 +165,15 @@ export default {
     name: 'contactDetails',
     data: () => ({
         valid: false,
-        districts: [
-            {
-                id: 1,
-                name: 'Haveri'
-            },
-            {
-                id: 2,
-                name: 'Dharwad'
-            }
-        ],
+        districts: [],
         states: [],
         address: {
-            residentailAddress: {
+            residentialAddress: {
                 address: '',
                 userPhNum: '',
                 city: '',
                 selectedDistrict: '',
+                district: '',
                 selectedState: '',
                 state: '',
                 zipcode: ''
@@ -171,6 +183,7 @@ export default {
                 userPhNum: '',
                 city: '',
                 selectedDistrict: '',
+                district: '',
                 selectedState: '',
                 state: '',
                 zipcode: ''
@@ -199,7 +212,48 @@ export default {
                 if(name === 'state') this.states = data[name];
             });
         },
+        onSelectState(val) {
+            if (val === 'resAdd') {
+                this.states.forEach((item) => {
+                    if(this.address.residentialAddress.selectedState === item.id) {
+                        this.address.residentialAddress.state = item.name;
+                        item.districts.forEach((item) => {
+                            const obj = {
+                                id: item.valueRef,
+                                name: item.value
+                            };
+                            this.districts.push(obj);
+                        })
+                    }
+                })
+            } else {
+                this.states.forEach((item) => {
+                    if(this.address.permanentAddress.selectedState === item.id) {
+                        this.address.permanentAddress.state = item.name;
+                        item.districts.forEach((item) => {
+                            const obj = {
+                                id: item.valueRef,
+                                name: item.value
+                            };
+                            this.districts.push(obj);
+                        })
+                    }
+                })
+            }
+        },
+        onSelectDistrict(val) {
+            if (val === 'resAdd') {
+                this.districts.forEach((item) => {
+                    if(this.address.residentialAddress.selectedDistrict === item.id) this.address.residentialAddress.district = item.name;
+                });
+            } else {
+                this.districts.forEach((item) => {
+                    if(this.address.permanentAddress.selectedDistrict === item.id) this.address.permanentAddress.district = item.name;
+                });
+            }
+        },
         async compltedSecondStep() {
+            this.$emit('onClickFinish');
             if (this.$refs.firstCol.validate() && this.$refs.secondCol.validate()) {
                 await this.saveUserContactDetail(this.address);
                 this.$emit('onClickFinish');
@@ -211,7 +265,7 @@ export default {
         makeDefaultAddress() {
             if (this.sameAddress) {
                 this.disableField = true;
-                this.address.permanentAddress = { ...this.address.residentailAddress };
+                this.address.permanentAddress = { ...this.address.residentialAddress };
             } else {
                 this.disableField = false;
                 Object.keys(this.address.permanentAddress).forEach(key => {
@@ -221,7 +275,7 @@ export default {
         }
     },
     mounted() {
-        this.address.residentailAddress = this.getUserContactDetails['residentailAddress'];
+        this.address.residentialAddress = this.getUserContactDetails['residentialAddress'];
         this.address.permanentAddress = this.getUserContactDetails['permanentAddress'];
         this.setDropDownVals();
     }

@@ -308,47 +308,47 @@ export default {
         },
         onChangeDept() {
             this.departments.forEach((item) => {
-                if (this.selectedDepartment === item.id) this.generalDetails.department = item.name
+                if (this.generalDetails.selectedDepartment === item.id) this.generalDetails.department = item.name
             })
         },
         onChangeMariage() {
             this.maritalStatus.forEach((item) => {
-                if (this.selectedMaritalStatus === item.id) this.generalDetails.mariageStatus = item.name
+                if (this.generalDetails.selectedMaritalStatus === item.id) this.generalDetails.mariageStatus = item.name
             })
         },
         onChangeTitle() {
             this.titles.forEach((item) => {
-                if (this.selectedTitle === item.id) this.generalDetails.title = item.name
+                if (this.generalDetails.selectedTitle === item.id) this.generalDetails.title = item.name
             })
         },
         onChangeRole() {
             this.roles.forEach((item) => {
-                if (this.selectedRole === item.id) this.generalDetails.role = item.name
+                if (this.generalDetails.selectedRole === item.id) this.generalDetails.role = item.name
             })
         },
         onChangeGender() {
             this.genders.forEach((item) => {
-                if (this.selectedGender === item.id) this.generalDetails.gender = item.name
+                if (this.generalDetails.selectedGender === item.id) this.generalDetails.gender = item.name
             })
         },
         onChangeQuali() {
-            this.qualifications((item) => {
-                if (this.selectedQualification === item.id) this.generalDetails.qualification = item.name;
+            this.qualifications.forEach((item) => {
+                if (this.generalDetails.selectedQualification === item.id) this.generalDetails.qualification = item.name;
             })  
         },
         onChangeNation() {
             this.nationality.forEach((item) => {
-                if (this.selectedNation === item.id) this.generalDetails.nation = item.name
+                if (this.generalDetails.selectedNation === item.id) this.generalDetails.nation = item.name
             })
         },
         onChangeReligion() {
             this.religions.forEach((item) => {
-                if (this.selectedReligion === item.id) this.generalDetails.religion = item.name
+                if (this.generalDetails.selectedReligion === item.id) this.generalDetails.religion = item.name
             })
         },
         onChangeObcSub() {
             this.obcSubCat.forEach((item) => {
-                if (this.selectedObcSub === item.id) this.generalDetails.obcSub = item.name
+                if (this.generalDetails.selectedObcSub === item.id) this.generalDetails.obcSub = item.name
             })
         },
         uploadProfilePic() {
@@ -381,11 +381,10 @@ export default {
             this.showCalander = false;
         },
         compltedFirstStep() {
-            this.$emit('onClickContinue');
+            // this.$emit('onClickContinue');
             if (this.$refs.firstNameForm.validate() && this.$refs.middleNameForm.validate() && this.$refs.lastNameForm.validate()) {
                 if (this.generalDetails.formattedDOB === '' || this.generalDetails.dob === '') this.showDOBerr = true;
                 else {
-                    console.log('complted 1st step');
                     this.saveUserGeneralDetail(this.generalDetails);
                     this.$emit('onClickContinue');
                 }

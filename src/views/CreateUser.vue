@@ -134,7 +134,7 @@ export default {
         ...mapGetters('UserCreationModule', ['getUserGeneralDetails', 'getUserContactDetails'])
     },
     methods: {
-        ...mapActions('UserCreationModule', ['getDropDownVals', 'dispatchDropdown', 'dropdownSetupCompleted']),
+        ...mapActions('UserCreationModule', ['getDropDownVals', 'dispatchDropdown', 'dropdownSetupCompleted', 'registerUser']),
         async getAllDropDownVals() {
            const data = await this.getDropDownVals();
            const arrList = ['dept', 'gender', 'nationality', 'maritalStatus', 'obcsub', 'quali', 'religion', 'role', 'social', 'title', 'state'];
@@ -143,7 +143,7 @@ export default {
                 else if (item === 'gender') this.setDropDown(data.data.gender, 'gender');
                 else if (item === 'nationality') this.setDropDown(data.data.nationality, 'nationality');
                 else if (item === 'obcsub') this.setDropDown(data.data.obcsubcategory, 'obcsub');
-                else if (item === 'maritalStatus') this.setDropDown(data.data.obcsubcategory, 'maritalStatus');
+                else if (item === 'maritalStatus') this.setDropDown(data.data.maritalStatus, 'maritalStatus');
                 else if (item === 'quali') this.setDropDown(data.data.qualification, 'quali');
                 else if (item === 'religion') this.setDropDown(data.data.religion, 'religion');
                 else if (item === 'role') this.setDropDown(data.data.role, 'role');
@@ -157,10 +157,15 @@ export default {
         },
         async setDropDown(arr, name) {
             let dropDownArr = [];
+            if(name === 'state') {}
             arr.forEach((item) => {
                 const obj = {
                     id: item.code,
                     name: item.value
+                }
+                if(name === 'state') {
+                    obj.districts = item.districts;
+                    obj.id = item.valueRef
                 }
                 dropDownArr.push(obj);
             })
@@ -182,24 +187,24 @@ export default {
         previousPage() {
             this.selectedTab -= 1;
         },
-        createUserWithDetails() {
+        async createUserWithDetails() {
             const genDetails = this.getUserGeneralDetails;
-            const contactDetails = this.getUserContactDetails
+            const contactDetails = this.getUserContactDetails;
             const requestBody = {
                 firstName: genDetails.firstName,
                 middleName: genDetails.middleName,
                 lastName: genDetails.lastName,
-                title: genDetails.selectedTitle,
-                titleCode: genDetails.titleCode,
+                title: genDetails.title,
+                titleCode: genDetails.selectedTitle,
                 userName: genDetails.userEmail,
-                gender: genDetails.selectedGender,
-                genderCode: genDetails.gender,
-                // contactNo: genDetails.contactDetails,
+                genderCode: genDetails.selectedGender,
+                gender: genDetails.gender,
+                contactNo: contactDetails.residentialAddress.userPhNum,
                 email: genDetails.userEmail,
                 // password: 'encryptedpassword',
                 role: genDetails.role,
                 roleCode: genDetails.selectedRole,
-                maritalStatus: genDetails.maritalStatus,
+                maritalStatus: genDetails.mariageStatus,
                 maritalStatusCode: genDetails.selectedMaritalStatus,
                 qualification: genDetails.qualification,
                 qualificationCode: genDetails.selectedQualification,
@@ -214,22 +219,24 @@ export default {
                 obcSubCategory: genDetails.obcSub,
                 residentialAddress: {
                     address: contactDetails.residentialAddress.address,
-                    state: contactDetails.residentailAddress.state,
-                    stateRef: contactDetails.residentailAddress.selectedState,
-                    district: contactDetails.residentailAddress.selectedDistrict,
-                    city: contactDetails.residentailAddress.city,
-                    zipCode: contactDetails.residentailAddress.zipcode
+                    state: contactDetails.residentialAddress.state,
+                    stateRef: contactDetails.residentialAddress.selectedState,
+                    districtRef: contactDetails.residentialAddress.selectedDistrict,
+                    city: contactDetails.residentialAddress.city,
+                    zipCode: contactDetails.residentialAddress.zipcode
                 },
                 permanentAddress: {
                     address: contactDetails.permanentAddress.address,
                     state: contactDetails.permanentAddress.state,
                     stateRef: contactDetails.permanentAddress.selectedState,
-                    district: contactDetails.permanentAddress.selectedDistrict,
+                    districtRef: contactDetails.permanentAddress.selectedDistrict,
+                    district: contactDetails.permanentAddress.district,
                     city: contactDetails.permanentAddress.city,
                     zipCode: contactDetails.permanentAddress.zipcode
                 }
             }
-            console.log('final data to sendto api', requestBody);
+            const data = await this.registerUser(requestBody);
+            console.log(data);
         }
     },
     mounted() {
