@@ -56,7 +56,7 @@
         </v-col>
       </v-row>
     </v-footer> -->
-      <router-view/>
+       <router-view></router-view>
   </v-app>
 </template>
 

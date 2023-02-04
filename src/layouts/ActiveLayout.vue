@@ -103,7 +103,7 @@ export default {
         },
         {
           action: 'mdi-cog',
-          items: [{ title: 'Logout', to: '/login' }, { title: 'Terms & Conditions' }],
+          items: [{ title: 'Logout', to: '/auth/login' }, { title: 'Terms & Conditions' }],
           title: 'SETTINGS',
         },
       ],

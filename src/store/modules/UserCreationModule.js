@@ -39,6 +39,7 @@ const state = {
         socialCategory: '',
         selectedObcSub: '',
         obcSub: '',
+        username: '',
         userEmail: '',
         password: ''
     },

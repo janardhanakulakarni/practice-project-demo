@@ -1,5 +1,7 @@
+/* eslint-disable */
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import { getToken } from './../utils/localStorage'
 import LoginView from '../views/LoginView.vue'
 import HomeView from '../views/HomeView.vue'
 
@@ -7,14 +9,33 @@ Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/login',
-    name: 'login',
-    component: LoginView
+    beforeEnter: (to, from, next) => {
+      next({ name: 'login'})
+    },
+    path: '/',
+  },
+  {
+    path: '/auth',
+    name: 'auth',
+    component: () => import('./../layouts/InactiveLayout.vue'),
+    beforeEnter: (to, from, next) => {
+      getToken() ? next({ name: 'home'}) : next()
+    },
+    children: [
+      {
+        path: 'login',
+        name: 'login',
+        component: LoginView,
+      }
+    ]
   },
   {
     path: '/user',
     name: 'user',
     component: () => import('./../layouts/ActiveLayout.vue'),
+    beforeEnter: (to, from, next) => {
+      getToken() ? next() : next({ name: 'login'})
+    },
     children: [
       {
         path: 'home',

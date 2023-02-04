@@ -6,8 +6,8 @@
                 <v-form ref="firstNameForm" v-model="valid" lazy-validation @submit.prevent="compltedFirstStep">
                     <v-row>
                         <!-- <img style="height: 20vh; width: 10vw" :src="url" alt=""
-                        /> -->
-                        <!-- <input 
+                        />
+                        <input 
                             type="file"
                             ref="myFile"
                             @input="uploadProfilePic"
@@ -30,7 +30,7 @@
                                 label="First Name"
                                 v-model="generalDetails.firstName"
                                 single-line
-                                :rules="fieldRules"
+                                :rules="nameRules"
                                 solo
                             ></v-text-field>
                         </v-col>
@@ -75,9 +75,21 @@
                         label="User Email"
                         v-model="generalDetails.userEmail"
                         single-line
-                        :rules="fieldRules"
+                        :rules="emailRules"
                         solo
                     ></v-text-field>
+                    <v-select
+                        v-if="showObcSubCat"
+                        :items="obcSubCat"
+                        label="OBC Sub Category"
+                        v-model="generalDetails.selectedObcSub"
+                        :menu-props="{ top: false, offsetY: true }"
+                        item-value="id"
+                        item-text="name"
+                        :rules="selectRules"
+                        @change="onChangeObcSub"
+                        solo
+                    ></v-select>
                 </v-form>
             </v-col>
             <v-col cols="4">
@@ -86,6 +98,9 @@
                         label="Middle Name"
                         v-model="generalDetails.middleName"
                         single-line
+                        :rules="[
+                            v => validateName(v) || 'Only alphabet and spaces are allowed',
+                        ]"
                         solo
                     ></v-text-field>
                     <div class="dob-style mt-3" @click="showCalander = !showCalander">{{generalDetails.dob === '' ? 'Date of birth' : generalDetails.formattedDOB}}</div>
@@ -124,10 +139,10 @@
                         solo
                     ></v-select>
                     <v-text-field
-                        label="Password"
-                        v-model="generalDetails.password"
+                        label="Username"
+                        v-model="generalDetails.username"
                         single-line
-                        :rules="fieldRules"
+                        :rules="nameRules"
                         solo
                     ></v-text-field>
                 </v-form>
@@ -138,7 +153,7 @@
                         label="Last Name"
                         v-model="generalDetails.lastName"
                         single-line
-                        :rules="fieldRules"
+                        :rules="nameRules"
                         solo
                     ></v-text-field>
                     <v-select
@@ -149,6 +164,7 @@
                         :menu-props="{ top: false, offsetY: true }"
                         item-value="id"
                         item-text="name"
+                        :rules="selectRules"
                         @change="onChangeMariage"
                         solo
                     ></v-select>
@@ -176,19 +192,14 @@
                         :rules="selectRules"
                         solo
                     ></v-select>
-                    <v-select
-                        class="mt-3"
-                        v-if="showObcSubCat"
-                        :items="obcSubCat"
-                        label="OBC Sub Category"
-                        v-model="generalDetails.selectedObcSub"
-                        :menu-props="{ top: false, offsetY: true }"
-                        item-value="id"
-                        item-text="name"
-                        :rules="selectRules"
-                        @change="onChangeObcSub"
+                    <v-text-field
+                        label="Password"
+                        type="password"
+                        v-model="generalDetails.password"
+                        single-line
+                        :rules="fieldRules"
                         solo
-                    ></v-select>
+                    ></v-text-field>
                 </v-form>
             </v-col>
         </v-row>
@@ -217,6 +228,7 @@
 <script>
 /* eslint-disable */
 import { mapActions, mapGetters } from 'vuex'
+import { validateEmail, validateName } from './../utils/validation';
 export default {
     name: 'GeneralDetails',
     data: () => ({
@@ -258,6 +270,7 @@ export default {
             selectedObcSub: '',
             obcSub: '',
             userEmail: '',
+            username: '',
             password: ''
         },
         showObcSubCat: false,
@@ -268,6 +281,10 @@ export default {
             v => !!v || 'This field is requried',
             v => v !== null || 'This field is requried',
         ],
+        nameRules: [
+            v => !!v || 'This field is requreid',
+            v => validateName(v) || 'Only alphabet and spaces are allowed',
+        ],
         selectRules: [
             v => !!v || 'One selection is required',
             v => v !== null || 'One selection is required',
@@ -275,6 +292,10 @@ export default {
         titleRules: [
             v => !!v || 'Required',
             v => v !== null || 'Required',
+        ],
+        emailRules: [
+            v => !!v || 'Email is Required',
+            val => validateEmail(val) || 'Please enter correct email address'
         ]
     }),
     computed: {
@@ -290,6 +311,8 @@ export default {
     methods: {
         ...mapActions('UserCreationModule', ['saveUserGeneralDetail']),
         ...mapActions('FileUpload', ['uploadFile', 'getFile']),
+        validateEmail,
+        validateName,
         setAllDropDownVals() {
             const arrList = ['dept', 'gender', 'nationality', 'maritalStatus', 'obcsub', 'quali', 'religion', 'role', 'social', 'title'];
             const data = this.getUserDropDownValues;
@@ -364,6 +387,8 @@ export default {
                 folderAndName: 'userProfile/emailofuser'
             }
             const profileUrl = await this.getFile(req);
+            this.url = profileUrl;
+            console.log('printing url', profileUrl);
         },
         onChangeSocialCat() {
             this.generalDetails.selectedObcSub = '';
@@ -385,6 +410,13 @@ export default {
             if (this.$refs.firstNameForm.validate() && this.$refs.middleNameForm.validate() && this.$refs.lastNameForm.validate()) {
                 if (this.generalDetails.formattedDOB === '' || this.generalDetails.dob === '') this.showDOBerr = true;
                 else {
+                    const base32 = require('hi-base32');
+                    const hashedPw = base32.encode(this.generalDetails.password);
+                    const chunks = [];
+                    for (let i = 0; i<hashedPw.length; i += 4 ) {
+                        chunks.push(hashedPw.substring(i, i + 4));
+                    }
+                    this.generalDetails.password = chunks.join('-');
                     this.saveUserGeneralDetail(this.generalDetails);
                     this.$emit('onClickContinue');
                 }
@@ -393,6 +425,7 @@ export default {
     },
     mounted() {
         this.generalDetails = this.getUserGeneralDetails;
+        this.getProfilePic();
     }
 }
 </script>

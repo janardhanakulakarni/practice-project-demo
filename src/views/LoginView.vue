@@ -108,6 +108,7 @@
 
 <script>
 import { mapActions } from 'vuex'
+import { validateEmail } from './../utils/validation'
   export default {
     name: 'LoginPage',
     data: () =>({
@@ -122,7 +123,7 @@ import { mapActions } from 'vuex'
       },
       emailRules: [
         (v) => v !== '' || 'Username is requried',
-        (v) => v !== null || 'Username is requried',
+        (v) => validateEmail(v) || 'Invalid Email format',
       ],
       passwordRules: [
         (v) => v !== '' || 'Password is requried',
@@ -131,6 +132,7 @@ import { mapActions } from 'vuex'
     }),
     methods: {
       ...mapActions('UserAuth', ['accountLogin']),
+      validateEmail,
       async onClickLogin() {
         if ((this.$refs.loginForm).validate()) {
           console.log(this.login);
@@ -138,7 +140,7 @@ import { mapActions } from 'vuex'
             email: 'skilldatatechnologies@gmail.com',
             password: '$2a$12$rTVL20N1a7h7cWV04maKtOeUPFVlIIlSnSDdrWSwKjPdQACb3ue3m'
           }
-          await this.accountLogin(req) 
+          await this.accountLogin(req)
         } 
       }
     },
