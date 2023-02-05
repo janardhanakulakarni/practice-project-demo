@@ -12,7 +12,7 @@
                             ref="myFile"
                             @input="uploadProfilePic"
                         />  -->
-                        <v-col cols="3">
+                        <v-col cols="4">
                             <v-select
                                 :items="titles"
                                 label="Title"
@@ -25,7 +25,7 @@
                                 @change="onChangeTitle"
                             ></v-select>
                         </v-col>
-                        <v-col cols="9">
+                        <v-col cols="8">
                             <v-text-field
                                 label="First Name"
                                 v-model="generalDetails.firstName"
@@ -192,19 +192,30 @@
                         :rules="selectRules"
                         solo
                     ></v-select>
-                    <v-text-field
-                        label="Password"
-                        type="password"
-                        v-model="generalDetails.password"
-                        single-line
-                        :rules="fieldRules"
-                        solo
-                    ></v-text-field>
+                    <v-row>
+                        <v-col cols="11">
+                            <v-text-field
+                                solo
+                                :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+                                :rules="fieldRules"
+                                :type="showPassword ? 'text' : 'password'"
+                                placeholder="Password"
+                                v-model="generalDetails.password"
+                                @click:append="showPassword = !showPassword"
+                            ></v-text-field>
+                        </v-col>
+                        <v-col cols="1">
+                            <v-icon class="mt-3" medium color="grey-5" style="margin-left: -12px" @click="generatedPassword">mdi-refresh-circle</v-icon>
+                        </v-col>
+                    </v-row>
                 </v-form>
             </v-col>
+        <div align="center" class="mt-n3 mb-6">
+            <v-btn @click="compltedFirstStep" large style="background: #85B09A" class="submit-btn-color">Continue</v-btn>
+        </div>
         </v-row>
-        <div align="center" class="pa-3">
-        <v-btn @click="compltedFirstStep" large style="background: #85B09A" class="submit-btn-color">Continue</v-btn>
+        <div align="start" class="px-16 my-5">
+            <span class="warning-text"><h5>Note: Please remember <strong>EMAIL, USERNAME</strong> and <strong>PASSWORD</strong> to login.</h5></span>
         </div>
     </div>
 </template>
@@ -243,6 +254,7 @@ export default {
         roles: [],
         titles: [],
         qualifications: [],
+        showPassword: false,
         generalDetails: {
             selectedQualification: '',
             qualification: '',
@@ -273,6 +285,7 @@ export default {
             username: '',
             password: ''
         },
+        chars: '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!@#$%^&*',
         showObcSubCat: false,
         showCalander: false,
         showDOBerr: '',
@@ -374,6 +387,15 @@ export default {
                 if (this.generalDetails.selectedObcSub === item.id) this.generalDetails.obcSub = item.name
             })
         },
+        generatedPassword() {
+            let temp = ''
+            for (let i = 0; i < 8; i++) {
+                let randomPassword = Math.floor(Math.random() * this.chars.length)
+                temp += this.chars.substring(randomPassword, randomPassword + 1)
+            }
+            this.generalDetails.password = temp;
+            console.log(temp);
+        },
         uploadProfilePic() {
             console.log(this.$refs.myFile.files);
             const req = {
@@ -410,13 +432,6 @@ export default {
             if (this.$refs.firstNameForm.validate() && this.$refs.middleNameForm.validate() && this.$refs.lastNameForm.validate()) {
                 if (this.generalDetails.formattedDOB === '' || this.generalDetails.dob === '') this.showDOBerr = true;
                 else {
-                    const base32 = require('hi-base32');
-                    const hashedPw = base32.encode(this.generalDetails.password);
-                    const chunks = [];
-                    for (let i = 0; i<hashedPw.length; i += 4 ) {
-                        chunks.push(hashedPw.substring(i, i + 4));
-                    }
-                    this.generalDetails.password = chunks.join('-');
                     this.saveUserGeneralDetail(this.generalDetails);
                     this.$emit('onClickContinue');
                 }

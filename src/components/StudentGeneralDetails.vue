@@ -13,16 +13,8 @@
                     ></v-text-field>
                     <v-text-field
                         class="mt-3"
-                        label="Father First Name"
-                        v-model="generalDetails.fatherFirstName"
-                        single-line
-                        :rules="fieldRules"
-                        solo
-                    ></v-text-field>
-                    <v-text-field
-                        class="mt-3"
-                        label="Mother First Name"
-                        v-model="generalDetails.motherFirstName"
+                        label="Father Name"
+                        v-model="generalDetails.fatherName"
                         single-line
                         :rules="fieldRules"
                         solo
@@ -40,18 +32,6 @@
                     <v-select
                         class="mt-3"
                         :class="[ showDOBerr ? 'mt-4' : 'mt-10']"
-                        :items="departments"
-                        label="Department"
-                        v-model="generalDetails.selecetdDepartment"
-                        :menu-props="{ top: false, offsetY: true }"
-                        :rules="selectRules"
-                        item-value="id"
-                        item-text="name"
-                        solo
-                        @change="checkSelecetdDept"
-                    ></v-select>
-                    <v-select
-                        class="mt-3"
                         :items="religions"
                         label="Religion"
                         :rules="selectRules"
@@ -61,6 +41,13 @@
                         item-text="name"
                         solo
                     ></v-select>
+                    <v-text-field
+                        class="mt-3"
+                        label="Cast certificate number"
+                        v-model="generalDetails.castCertificateNumber"
+                        single-line
+                        solo
+                    ></v-text-field>
                 </v-form>
             </v-col>
             <v-col cols="4">
@@ -73,16 +60,57 @@
                     ></v-text-field>
                     <v-text-field
                         class="mt-3"
-                        label="Father Middle Name"
-                        v-model="generalDetails.fatherMiddleName"
+                        label="Mother Name"
+                        v-model="generalDetails.motherName"
                         single-line
+                        :rules="fieldRules"
                         solo
                     ></v-text-field>
-                    <v-text-field
+                    <v-select
                         class="mt-3"
-                        label="Mother Middle Name"
-                        v-model="generalDetails.motherMiddleName"
+                        :items="departments"
+                        label="Department"
+                        v-model="generalDetails.selecetdDepartment"
+                        :menu-props="{ top: false, offsetY: true }"
+                        :rules="selectRules"
+                        item-value="id"
+                        item-text="name"
+                        solo
+                        @change="checkSelecetdDept"
+                    ></v-select>
+                    <v-select
+                        class="mt-3"
+                        :items="socialCategories"
+                        label="Social Category"
+                        v-model="generalDetails.selectedSocialCategory"
+                        :menu-props="{ top: false, offsetY: true }"
+                        item-value="id"
+                        :rules="selectRules"
+                        item-text="name"
+                        @change="onChangeSocialCat"
+                        solo
+                    ></v-select>
+                    <v-select
+                        class="mt-3"
+                        v-if="showObcSubCat"
+                        :items="obcSubCat"
+                        label="OBC Sub Category"
+                        v-model="generalDetails.selectedObcSub"
+                        :menu-props="{ top: false, offsetY: true }"
+                        item-value="id"
+                        item-text="name"
+                        :rules="selectRules"
+                        solo
+                    ></v-select>
+                </v-form>
+            </v-col>
+            <v-col cols="4">
+                <v-form ref="lastNameForm" v-model="valid" lazy-validation @submit.prevent="compltedFirstStep">
+                    <v-text-field
+                        label="Last Name"
+                        v-model="generalDetails.lastName"
                         single-line
+                        :rules="fieldRules"
                         solo
                     ></v-text-field>
                     <v-select
@@ -109,43 +137,6 @@
                     ></v-select>
                     <v-select
                         class="mt-3"
-                        :items="socialCategories"
-                        label="Social Category"
-                        v-model="generalDetails.selectedSocialCategory"
-                        :menu-props="{ top: false, offsetY: true }"
-                        item-value="id"
-                        :rules="selectRules"
-                        item-text="name"
-                        @change="onChangeSocialCat"
-                        solo
-                    ></v-select>
-                </v-form>
-            </v-col>
-            <v-col cols="4">
-                <v-form ref="lastNameForm" v-model="valid" lazy-validation @submit.prevent="compltedFirstStep">
-                    <v-text-field
-                        label="Last Name"
-                        v-model="generalDetails.lastName"
-                        single-line
-                        :rules="fieldRules"
-                        solo
-                    ></v-text-field>
-                    <v-text-field
-                        class="mt-3"
-                        label="Father Last Name"
-                        v-model="generalDetails.fatherLastName"
-                        single-line
-                        solo
-                    ></v-text-field>
-                    <v-text-field
-                        class="mt-3"
-                        label="Mother Last Name"
-                        v-model="generalDetails.motherLastName"
-                        single-line
-                        solo
-                    ></v-text-field>
-                    <v-select
-                        class="mt-3"
                         :items="nationality"
                         label="Nationality"
                         v-model="generalDetails.selectedNation"
@@ -155,29 +146,10 @@
                         :rules="selectRules"
                         solo
                     ></v-select>
-                    <v-text-field
-                        class="mt-3"
-                        label="Cast certificate number"
-                        v-model="generalDetails.castCertificateNumber"
-                        single-line
-                        solo
-                    ></v-text-field>
-                    <v-select
-                        class="mt-3"
-                        v-if="showObcSubCat"
-                        :items="obcSubCat"
-                        label="OBC Sub Category"
-                        v-model="generalDetails.selectedObcSub"
-                        :menu-props="{ top: false, offsetY: true }"
-                        item-value="id"
-                        item-text="name"
-                        :rules="selectRules"
-                        solo
-                    ></v-select>
                 </v-form>
             </v-col>
         </v-row>
-        <div align="center" class="pt-3">
+        <div align="center" class="mt-n3 mb-6">
         <v-btn @click="compltedFirstStep" large style="background: #85B09A" class="submit-btn-color">Continue</v-btn>
         </div>
     </div>
@@ -204,170 +176,19 @@ import { mapActions, mapGetters } from 'vuex'
 export default {
     name: 'GeneralDetails',
     data: () => ({
-        departments: [
-            {
-                id: 1,
-                name: 'Civil Engineering'
-            },
-            {
-                id: 2,
-                name: 'Computer Science Engineering'
-            },
-            {
-                id: 3,
-                name: 'Electrial & Electronics Engineering'
-            },
-            {
-                id: 4,
-                name: 'Electronics & Communication Engineering'
-            },
-            {
-                id: 5,
-                name: 'Information Science Engineering'
-            },
-            {
-                id: 6,
-                name: 'Mechanical Engineering'
-            },
-        ],
-        semesters: [
-            {
-                id: 1,
-                name: '1st Semester'
-            },
-            {
-                id: 2,
-                name: '2nd Semester'
-            },
-            {
-                id: 3,
-                name: '3rd Semester'
-            },
-            {
-                id: 4,
-                name: '4th Semester'
-            },
-            {
-                id: 5,
-                name: '5th Semester'
-            },
-            {
-                id: 6,
-                name: '6th Semester'
-            },
-            {
-                id: 7,
-                name: '7th Semester'
-            },
-            {
-                id: 8,
-                name: '8th Semester'
-            }
-        ],
-        nationality: [
-            {
-                id: 1,
-                name: 'India'
-            },
-            {
-                id: 'OTHER',
-                name: 'Other'
-            }
-        ],
-        religions: [
-            {
-                id: 1,
-                name: 'Buddhist'
-            },
-            {
-                id: 2,
-                name: 'Christian'
-            },
-            {
-                id: 3,
-                name: 'Hindu'
-            },
-            {
-                id: 4,
-                name: 'Islamic'
-            },
-            {
-                id: 5,
-                name: 'Jain'
-            },
-            {
-                id: 6,
-                name: 'Parsi'
-            },
-            {
-                id: 7,
-                name: 'Sikh'
-            },
-            {
-                id: 8,
-                name: 'Other'
-            },
-        ],
-        socialCategories: [
-            {
-                id: 1,
-                name: 'General'
-            },
-            {
-                id: 2,
-                name: 'OBC'
-            },
-            {
-                id: 3,
-                name: 'SC'
-            },
-            {
-                id: 4,
-                name: 'ST'
-            }
-        ],
-        obcSubCat: [
-            {
-                id: 1,
-                name: 'Category 1'
-            },
-            {
-                id: 2,
-                name: 'Category 2A'
-            },
-            {
-                id: 3,
-                name: 'Category 2B'
-            },
-            {
-                id: 4,
-                name: 'Category 3A'
-            },
-            {
-                id: 5,
-                name: 'Category 3B'
-            }
-        ],
-        genders: [
-            {
-                id: 1,
-                name: 'Male'
-            },
-            {
-                id: 2,
-                name: 'Female'
-            },
-            {
-                id: 3,
-                name: 'Transgender'
-            }
-        ],
+        departments: [],
+        semesters: [],
+        nationality: [],
+        religions: [],
+        socialCategories: [],
+        obcSubCat: [],
+        genders: [],
         fieldRules: [
-            (v) => v !== '' || 'This field is requried',
+            (v) => !!v || 'This field is requried',
             (v) => v !== null || 'This field is requried',
         ],
         selectRules: [
-            v => v !== '' || 'One selection is required',
+            v => !!v || 'One selection is required',
             v => v !== null || 'One selection is required',
         ],
         generalDetails: {
@@ -376,12 +197,8 @@ export default {
             firstName: '',
             middleName: '',
             lastName: '',
-            fatherFirstName: '',
-            fatherMiddleName: '',
-            fatherLastName: '',
-            motherFirstName: '',
-            motherMiddleName: '',
-            motherLastName: '',
+            fatherName: '',
+            motherName: '',
             selectedGender: '',
             dob: '',
             formattedDOB: '',
@@ -396,11 +213,30 @@ export default {
         showDOBerr: '',
         valid: false
     }),
+    watch: {
+        getDropDownCompletedVal(newVal) {
+            if(newVal) {
+                this.setAllDropDownVals();
+            }
+        }
+    },
     computed: {
-        ...mapGetters('StudentEnrollModule', ['getGeneralDetails'])
+        ...mapGetters('StudentEnrollModule', ['getGeneralDetails', 'getDropDownCompletedVal', 'getStudentDropDownValues'])
     },
     methods: {
         ...mapActions('StudentEnrollModule', ['saveGeneralDetail']),
+        setAllDropDownVals() {
+            const arrList = ['dept', 'gender', 'nationality', 'obcsub', 'religion','social'];
+            const data = this.getStudentDropDownValues;
+            arrList.forEach((name) => {
+                if (name === 'dept') this.departments = data[name];
+                else if (name === 'gender') this.genders = data[name];
+                else if (name === 'nationality') this.nationality = data[name];
+                else if (name === 'obcsub') this.obcSubCat = data[name];
+                else if (name === 'religion') this.religions = data[name];
+                else if (name === 'social') this.socialCategories = data[name];
+            })
+        },
         checkSelecetdDept() {
             console.log(this.generalDetails.selecetdDepartment, typeof this.generalDetails.selecetdDepartment);
             console.log(this.generalDetails.selectedGender);

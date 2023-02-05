@@ -97,9 +97,9 @@ const getters = {
 };
 
 const actions = { 
-    async getDropDownVals(nameOfScreen) {
+    async getDropDownVals() {
         const payload = {
-            screenName: nameOfScreen
+            screenName: 'userRegistration'
         }
         const { data } = await axiosrequest.get('/users/getData', payload)
         console.log(data);
@@ -130,6 +130,9 @@ const actions = {
         const data = await axiosrequest.post('/auth/register', payload)
         console.log(data.json());
         return data;
+    },
+    async destroyUserData({commit}, str) {
+        commit('deleteUserData', str);
     }
 };
 
@@ -156,6 +159,24 @@ const mutations = {
         if (payload.detailType === 'contact') {
             state.contactDetails['residentialAddress'] = payload.data['residentialAddress'];
             state.contactDetails['permanentAddress'] = payload.data['permanentAddress'];
+        }
+    },
+    deleteUserData(state, val) {
+        if (val === 'all') {
+            state.departments = [];
+            state.nationality = [];
+            state.religions = [];
+            state.socialCategories = [];
+            state.obcSubCat = [];
+            state.genders = [];
+            state.maritalStatus = [];
+            state.roles = [];
+            state.titles = [];
+            state.qualifications = [];
+            state.states = [];
+            state.isDropdownSetupCompleted = false;
+        } else {
+            console.log('only form data');
         }
     }
 }

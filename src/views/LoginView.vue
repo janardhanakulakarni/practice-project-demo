@@ -13,13 +13,13 @@
             >
               {{ 'Entered username or password is invalid' }}
             </v-snackbar>
-      <v-row justify="center" class="mx-12" style="background: #85B09A">
+      <v-row justify="center" class="mx-12" style="background: #85B09A; height: 85vh">
         <v-col cols="7">
           <v-card
             :loading="loading"
             class="ml-4 mt-4"
             min-width="300"
-            height="700"
+            height="75vh"
             style="background: #B6B6B6"
             :elevation="25 - 1"
           >
@@ -53,7 +53,7 @@
             :loading="loading"
             class="mr-1 ml-n10 mt-7 mb-4"
             min-width="300"
-            height="700"
+            height="75vh"
           >
 
             <!-- <v-row class="ml-4 pt-12" justify="center">
@@ -70,16 +70,20 @@
             <v-card
               :loading="loading"
               class="mx-15 my-4"
-              min-width="300"
+              width="26vw"
               :elevation="25 - 1"
-              height="300"
+              height="42vh"
               style="background-color: 	#85B09A"
             >
-            <v-form class="mx-12 pt-8" ref="loginForm" v-model="valid" lazy-validation @submit.prevent="onClickLogin">
-                
-              <v-text-field :rules="emailRules" v-model="login.email" class="login-form" placeholder="Username or Email"></v-text-field>
-              <!-- <v-text-field :rules="passwordRules" class="login-form" placeholder="Password"></v-text-field> -->
+            <v-form class="mx-12 pt-2" ref="loginForm" v-model="valid" lazy-validation @submit.prevent="onClickLogin">
+              <v-text-field 
+                :rules="emailRules" 
+                v-model="login.email" 
+                class="login-form" 
+                placeholder="Username or Email">
+              </v-text-field>
               <v-text-field
+                class="mt-n2"
                 :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
                 :rules="passwordRules"
                 :type="showPassword ? 'text' : 'password'"
