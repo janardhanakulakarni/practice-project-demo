@@ -26,7 +26,7 @@ const axiosInstance = axios.create({
 })
 
 const request = {
-    get: (url, param) => axiosInstance.get(url, param),
+    get: (url, body) => axiosInstance.get(url, body),
     post: (url, body) => axiosInstance.post(url, body),
     put: (url, body) => axiosInstance.get(url, { body }),
     patch: (url, body) => axiosInstance.get(url, { body }),

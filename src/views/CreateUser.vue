@@ -100,7 +100,7 @@
 .tab-item-radius {
   border-bottom-left-radius: 15px;
   border-bottom-right-radius: 15px;
-  height: 73vh;
+  min-height: 85vh;
 }
 ::v-deep .theme--dark.v-tabs > .v-tabs-bar .v-tab:not(.v-tab--active), .theme--dark.v-tabs > .v-tabs-bar .v-tab:not(.v-tab--active) > .v-icon, .theme--dark.v-tabs > .v-tabs-bar .v-tab:not(.v-tab--active) > .v-btn, .theme--dark.v-tabs > .v-tabs-bar .v-tab--disabled {
     color: #333333;
@@ -134,7 +134,7 @@ export default {
         ...mapGetters('UserCreationModule', ['getUserGeneralDetails', 'getUserContactDetails'])
     },
     methods: {
-        ...mapActions('UserCreationModule', ['getDropDownVals', 'dispatchDropdown', 'dropdownSetupCompleted', 'registerUser']),
+        ...mapActions('UserCreationModule', ['getDropDownVals', 'dispatchDropdown', 'dropdownSetupCompleted', 'registerUser', 'destroyUserData']),
         async getAllDropDownVals() {
            const data = await this.getDropDownVals();
            const arrList = ['dept', 'gender', 'nationality', 'maritalStatus', 'obcsub', 'quali', 'religion', 'role', 'social', 'title', 'state'];
@@ -190,6 +190,13 @@ export default {
         async createUserWithDetails() {
             const genDetails = this.getUserGeneralDetails;
             const contactDetails = this.getUserContactDetails;
+            const base32 = require('hi-base32');
+                const hashedPw = base32.encode(genDetails.password);
+            const chunks = [];
+            for (let i = 0; i<hashedPw.length; i += 4 ) {
+                chunks.push(hashedPw.substring(i, i + 4));
+            }
+            encPW = chunks.join('-');
             const requestBody = {
                 firstName: genDetails.firstName,
                 middleName: genDetails.middleName,
@@ -201,7 +208,7 @@ export default {
                 gender: genDetails.gender,
                 contactNo: contactDetails.residentialAddress.userPhNum,
                 email: genDetails.userEmail,
-                // password: 'encryptedpassword',
+                password: encPW,
                 role: genDetails.role,
                 roleCode: genDetails.selectedRole,
                 maritalStatus: genDetails.mariageStatus,
@@ -239,8 +246,11 @@ export default {
             console.log(data);
         }
     },
-    mounted() {
+    created() {
         this.getAllDropDownVals();
+    },
+    destroyed() {
+        this.destroyUserData('all')
     }
 }
 </script>

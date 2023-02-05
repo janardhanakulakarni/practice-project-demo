@@ -41,7 +41,7 @@
 .tab-item-radius {
   border-bottom-left-radius: 15px;
   border-bottom-right-radius: 15px;
-  height: 73vh;
+  min-height: 85vh;
 }
 ::v-deep .theme--dark.v-tabs > .v-tabs-bar .v-tab:not(.v-tab--active), .theme--dark.v-tabs > .v-tabs-bar .v-tab:not(.v-tab--active) > .v-icon, .theme--dark.v-tabs > .v-tabs-bar .v-tab:not(.v-tab--active) > .v-btn, .theme--dark.v-tabs > .v-tabs-bar .v-tab--disabled {
     color: #333333;
@@ -53,6 +53,7 @@ import StudentGeneralDetails from './../components/StudentGeneralDetails.vue'
 import StudentContactDetails from './../components/StudentContactDetails.vue'
 import StudentAcademicDetails from './../components/StudentAcademicDetail.vue'
 import StudentBankDetails from './../components/StudentBankDetail.vue'
+import { mapActions, mapGetters } from 'vuex'
 
 export default {
     components: {
@@ -68,7 +69,46 @@ export default {
           'General Details', 'Contact Details', 'Academic Details', 'Bank Details',
         ],
     }),
+    computed: {
+        ...mapGetters('StudentEnrollModule', ['getGeneralDetails'])
+    },
     methods: {
+      ...mapActions('StudentEnrollModule', ['getDropdownVal', 'dispatchDropdown', 'dropdownSetupCompleted', 'saveGeneralDetail']),
+      async getAllStudentDropdown() {
+        const data = await this.getDropdownVal();
+        const arrList = ['dept', 'gender', 'nationality', 'obcsub', 'religion', 'social', 'state'];
+           arrList.forEach((item) => {
+                if (item === 'dept') this.setDropDown(data.data.department, 'dept');
+                else if (item === 'gender') this.setDropDown(data.data.gender, 'gender');
+                else if (item === 'nationality') this.setDropDown(data.data.nationality, 'nationality');
+                else if (item === 'obcsub') this.setDropDown(data.data.obcsubcategory, 'obcsub');
+                else if (item === 'religion') this.setDropDown(data.data.religion, 'religion');
+                else if (item === 'social') this.setDropDown(data.data.socialcategory, 'social');
+                else if (item === 'state') {
+                  this.setDropDown(data.data.states, 'state');
+                  this.dropdownSetupCompleted();
+                }
+           });
+      },
+      async setDropDown(arr, name) {
+            let dropDownArr = [];
+            arr.forEach((item) => {
+                const obj = {
+                    id: item.code,
+                    name: item.value
+                }
+                if(name === 'state') {
+                    obj.districts = item.districts;
+                    obj.id = item.valueRef
+                }
+                dropDownArr.push(obj);
+            })
+            const req = {
+                name: name,
+                arr: dropDownArr
+            }
+            await this.dispatchDropdown(req);
+        },
       nextPage() {
         this.selectedTab += 1;
       },
@@ -79,5 +119,8 @@ export default {
         console.log('compelete data');
       }
     },
+    created() {
+      this.getAllStudentDropdown();
+    }
 }
 </script>
