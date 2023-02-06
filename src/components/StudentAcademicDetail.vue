@@ -12,7 +12,19 @@
                         :rules="fieldRules"
                         solo
                     ></v-text-field>
+                    <v-select
+                        class="mt-3"
+                        :items="pucOrDiploma"
+                        label="PUC/Dimploma"
+                        v-model="selectedPUC"
+                        :menu-props="{ top: false, offsetY: true }"
+                        item-value="id"
+                        item-text="name"
+                        solo
+                        @change="onSelectPU"
+                    ></v-select>
                     <v-text-field
+                        v-if="showPUC"
                         class="mt-3"
                         label="PUC Registartion number"
                         v-model="academicDetails.pucRegNum"
@@ -21,10 +33,12 @@
                         solo
                     ></v-text-field>
                     <v-text-field
+                        v-if="!showPUC"
                         class="mt-3"
                         label="Diploma Registartion number"
                         v-model="academicDetails.diplomaRegNum"
                         single-line
+                        :rules="fieldRules"
                         solo
                     ></v-text-field>
                     <v-select
@@ -50,8 +64,10 @@
                         :rules="fieldRules"
                         solo
                     ></v-text-field>
+                    <div class="mt-7 warning-text"> <strong> Please select one option to enter PUC/Diploma results</strong></div>
                     <v-text-field
-                        class="mt-3"
+                        v-if="showPUC"
+                        class="mt-13"
                         label="PUC Results"
                         v-model="academicDetails.pucResult"
                         single-line
@@ -59,10 +75,12 @@
                         solo
                     ></v-text-field>
                     <v-text-field
-                        class="mt-3"
+                        v-if="!showPUC"
+                        class="mt-13"
                         label="Diploma Results"
                         v-model="academicDetails.diplomaResult"
                         single-line
+                        :rules="fieldRules"
                         solo
                     ></v-text-field>
                     <v-select
@@ -108,6 +126,17 @@ export default {
     name: 'academicDetails',
     data: () => ({
         valid: false,
+        pucOrDiploma: [
+            {
+                id: 1,
+                name: 'PUC'
+            },
+            {
+                id: 2,
+                name: 'Diploma'
+            },
+        ],
+        showPUC: true,
         seatTypes: [
             {
                 id: 1,
@@ -140,6 +169,7 @@ export default {
                 name: 'Management'
             }
         ],
+        selectedPUC: '',
         academicDetails: {
             sslcRegNum: '',
             pucRegNum: '',
@@ -164,6 +194,10 @@ export default {
     },
     methods: {
         ...mapActions('StudentEnrollModule', ['saveAcademicDetail']),
+        onSelectPU() {
+            if (this.selectedPUC === 1) this.showPUC = true;
+            else this.showPUC = false;
+        },
         compltedThirdStep() {
             if (this.$refs.firstCol.validate() && this.$refs.secondCol.validate()) {
                 this.saveAcademicDetail(this.academicDetails);

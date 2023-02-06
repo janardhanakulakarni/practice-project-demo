@@ -5,25 +5,33 @@ const state = {
     nationality: [],
     religions: [],
     socialCategories: [],
+    semesters: [],
     obcSubCat: [],
     genders: [],
     states: [],
     isDropdownSetupCompleted: false,  
     generalDetails: {
-        selecetdDepartment: '',
+        selectedDepartment: '',
+        department: '',
         selectedSemester: '1',
+        semester: '',
         firstName: '',
         middleName: '',
         lastName: '',
-        fatherFirstName: '',
+        fatherName: '',
         motherName: '',
         selectedGender: '',
+        gender: '',
         dob: '',
         formattedDOB: '',
         selectedNation: '',
+        nation: '',
         selectedReligion: '',
+        religion: '',
         selectedSocialCategory: '',
+        socialCategory: '',
         selectedObcSub: '',
+        obcSub: '',
         castCertificateNumber: '' 
     },
     contactDetails: {
@@ -75,6 +83,7 @@ const getters = {
             'obcsub': state.obcSubCat,
             'religion': state.religions, 
             'social': state.socialCategories, 
+            'sem': state.semesters,
             'state': state.states
         }
         return obj;
@@ -98,10 +107,7 @@ const getters = {
 
 const actions = {
     async getDropdownVal() {
-        const payload = {
-            screenName: 'studentEnrollment'
-        }
-        const { data } = await axiosrequest.get('/users/getData', payload)
+        const { data } = await axiosrequest.get('/users/getData')
         console.log(data);
         return data;
     },
@@ -159,6 +165,7 @@ const mutations = {
         else if (payload.name === 'obcsub') state.obcSubCat = payload.arr;
         else if (payload.name === 'religion') state.religions = payload.arr;
         else if (payload.name === 'social') state.socialCategories = payload.arr;
+        else if (payload.name === 'sem') state.semesters = payload.arr;
         else if (payload.name === 'state') state.states = payload.arr;
 
     },

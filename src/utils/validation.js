@@ -11,3 +11,10 @@ export function validateName(str) {
     }
     return false;
 }
+export function validatePhnum(str) {
+    if (str.match(/^[0-9]+$/)) {
+        return true;
+    }
+    return false;
+}
+

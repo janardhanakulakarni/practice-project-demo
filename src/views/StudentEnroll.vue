@@ -76,7 +76,7 @@ export default {
       ...mapActions('StudentEnrollModule', ['getDropdownVal', 'dispatchDropdown', 'dropdownSetupCompleted', 'saveGeneralDetail']),
       async getAllStudentDropdown() {
         const data = await this.getDropdownVal();
-        const arrList = ['dept', 'gender', 'nationality', 'obcsub', 'religion', 'social', 'state'];
+        const arrList = ['dept', 'gender', 'nationality', 'obcsub', 'religion', 'sem', 'social', 'state'];
            arrList.forEach((item) => {
                 if (item === 'dept') this.setDropDown(data.data.department, 'dept');
                 else if (item === 'gender') this.setDropDown(data.data.gender, 'gender');
@@ -84,6 +84,7 @@ export default {
                 else if (item === 'obcsub') this.setDropDown(data.data.obcsubcategory, 'obcsub');
                 else if (item === 'religion') this.setDropDown(data.data.religion, 'religion');
                 else if (item === 'social') this.setDropDown(data.data.socialcategory, 'social');
+                else if (item === 'sem') this.setDropDown(data.data.semester, 'sem');
                 else if (item === 'state') {
                   this.setDropDown(data.data.states, 'state');
                   this.dropdownSetupCompleted();

@@ -23,7 +23,8 @@
                     <v-date-picker 
                         v-if="showCalander" 
                         v-model="generalDetails.dob" 
-                        full-width 
+                        full-width
+                        flat
                         header-color="#85B09A" 
                         elevation="15"
                         @change="onSelectDate"
@@ -40,6 +41,7 @@
                         item-value="id"
                         item-text="name"
                         solo
+                        @change="onChangeReligion"
                     ></v-select>
                     <v-text-field
                         class="mt-3"
@@ -70,7 +72,7 @@
                         class="mt-3"
                         :items="departments"
                         label="Department"
-                        v-model="generalDetails.selecetdDepartment"
+                        v-model="generalDetails.selectedDepartment"
                         :menu-props="{ top: false, offsetY: true }"
                         :rules="selectRules"
                         item-value="id"
@@ -101,6 +103,7 @@
                         item-text="name"
                         :rules="selectRules"
                         solo
+                        @change="onChangeObcSub"
                     ></v-select>
                 </v-form>
             </v-col>
@@ -123,6 +126,7 @@
                         :rules="selectRules"
                         item-text="name"
                         solo
+                        @change="onChangeGender"
                     ></v-select>
                     <v-select
                         class="mt-3"
@@ -134,6 +138,7 @@
                         :rules="selectRules"
                         item-text="name"
                         solo
+                        @change="onChangeSemester"
                     ></v-select>
                     <v-select
                         class="mt-3"
@@ -145,6 +150,7 @@
                         item-text="name"
                         :rules="selectRules"
                         solo
+                        @change="onChangeNation"
                     ></v-select>
                 </v-form>
             </v-col>
@@ -184,28 +190,35 @@ export default {
         obcSubCat: [],
         genders: [],
         fieldRules: [
-            (v) => !!v || 'This field is requried',
-            (v) => v !== null || 'This field is requried',
+            v => !!v || 'This field is requried',
+            v => v !== null || 'This field is requried',
         ],
         selectRules: [
             v => !!v || 'One selection is required',
             v => v !== null || 'One selection is required',
         ],
         generalDetails: {
-            selecetdDepartment: '',
+            selectedDepartment: '',
+            department: '',
             selectedSemester: '1',
+            semester: '',
             firstName: '',
             middleName: '',
             lastName: '',
             fatherName: '',
             motherName: '',
             selectedGender: '',
+            gender: '',
             dob: '',
             formattedDOB: '',
             selectedNation: '',
+            nation: '',
             selectedReligion: '',
+            religion: '',
             selectedSocialCategory: '',
+            socialCategory: '',
             selectedObcSub: '',
+            obcSub: '',
             castCertificateNumber: '' 
         },
         showObcSubCat: false,
@@ -226,7 +239,7 @@ export default {
     methods: {
         ...mapActions('StudentEnrollModule', ['saveGeneralDetail']),
         setAllDropDownVals() {
-            const arrList = ['dept', 'gender', 'nationality', 'obcsub', 'religion','social'];
+            const arrList = ['dept', 'gender', 'nationality', 'sem', 'obcsub', 'religion','social'];
             const data = this.getStudentDropDownValues;
             arrList.forEach((name) => {
                 if (name === 'dept') this.departments = data[name];
@@ -234,25 +247,54 @@ export default {
                 else if (name === 'nationality') this.nationality = data[name];
                 else if (name === 'obcsub') this.obcSubCat = data[name];
                 else if (name === 'religion') this.religions = data[name];
+                else if (name === 'sem') this.semesters = data[name];
                 else if (name === 'social') this.socialCategories = data[name];
             })
         },
+        onChangeGender() {
+            this.genders.forEach((item) => {
+                if (this.generalDetails.selectedGender === item.id) this.generalDetails.gender = item.name
+            })
+        },
+        onChangeSemester() {
+            this.semesters.forEach((item) => {
+                if (this.generalDetails.selectedSemester === item.id) this.generalDetails.semester = item.name
+            })
+        },
         checkSelecetdDept() {
-            console.log(this.generalDetails.selecetdDepartment, typeof this.generalDetails.selecetdDepartment);
-            console.log(this.generalDetails.selectedGender);
+            this.departments.forEach((item) => {
+                if (this.generalDetails.selectedDepartment === item.id) this.generalDetails.department = item.name
+            });
+        },
+        onChangeReligion() {
+            this.religions.forEach((item) => {
+                if (this.generalDetails.selectedReligion === item.id) this.generalDetails.religion = item.name
+            })
         },
         onChangeSocialCat() {
-            console.log(this.generalDetails.selectedSocialCategory);
+            this.socialCategories.forEach((item) => {
+                if (this.selectedSocialCategory === item.id) this.generalDetails.socialCategory = item.name
+            })
             this.generalDetails.selectedObcSub = '';
             if (this.generalDetails.selectedSocialCategory === 2) this.showObcSubCat = true;
             else this.showObcSubCat = false;
+        },
+        onChangeNation() {
+            this.nationality.forEach((item) => {
+                if (this.generalDetails.selectedNation === item.id) this.generalDetails.nation = item.name
+            })
+        },
+        onChangeObcSub() {
+            this.obcSubCat.forEach((item) => {
+                if (this.generalDetails.selectedObcSub === item.id) this.generalDetails.obcSub = item.name
+            })
         },
         onSelectDate() {
             this.showDOBerr = false;
             if (!this.generalDetails.dob) return null;
             const [year, month, date] = this.generalDetails.dob.split('-');
             this.generalDetails.formattedDOB = `${date}/${month}/${year}`;
-            this.showCalander = false;
+            this.showCalander = false; 
         },
         compltedFirstStep() {
             // this.$emit('onClickContinue');
