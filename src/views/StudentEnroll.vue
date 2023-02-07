@@ -53,7 +53,7 @@
 .tab-item-radius {
   border-bottom-left-radius: 15px;
   border-bottom-right-radius: 15px;
-  min-height: 85vh;
+  min-height: 60vh;
 }
 ::v-deep .theme--dark.v-tabs > .v-tabs-bar .v-tab:not(.v-tab--active), .theme--dark.v-tabs > .v-tabs-bar .v-tab:not(.v-tab--active) > .v-icon, .theme--dark.v-tabs > .v-tabs-bar .v-tab:not(.v-tab--active) > .v-btn, .theme--dark.v-tabs > .v-tabs-bar .v-tab--disabled {
     color: #333333;
