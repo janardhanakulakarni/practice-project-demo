@@ -144,7 +144,7 @@ export default {
             color: '',
             desc: '',
         },
-        showMessage: true,
+        showMessage: false,
         // showWarning: false
     }),
     computed: {
@@ -215,7 +215,7 @@ export default {
             for (let i = 0; i<hashedPw.length; i += 4 ) {
                 chunks.push(hashedPw.substring(i, i + 4));
             }
-            encPW = chunks.join('-');
+            const encPW = chunks.join('-');
             const requestBody = {
                 firstName: genDetails.firstName,
                 middleName: genDetails.middleName,
@@ -262,10 +262,11 @@ export default {
                     zipCode: contactDetails.permanentAddress.zipcode
                 }
             }
-            const data = await this.registerUser(requestBody);
+            const { data } = await this.registerUser(requestBody);
+            console.log(data);
             if (data.status === 'success') {
                 this.msg.color = 'green';
-                this.msg.desc = data.message;
+                this.msg.desc = 'User created successfully';
                 this.showMessage = true;
                 this.stopLoading();
                 this.selectedTab = 0;

@@ -137,7 +137,6 @@ const actions = {
         try {
             commit('Common/setLoadingToTrue', null, {root : true});
             const data = await axiosrequest.post('/auth/register', payload)
-            console.log(data.json());
             return data;
         } catch (err) {
             console.error(err);

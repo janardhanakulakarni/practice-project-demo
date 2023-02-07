@@ -254,7 +254,7 @@ export default {
             }
         },
         async compltedSecondStep() {
-            this.$emit('onClickFinish');
+            // this.$emit('onClickFinish');
             if (this.$refs.firstCol.validate() && this.$refs.secondCol.validate()) {
                 await this.saveUserContactDetail(this.address);
                 this.$emit('onClickFinish');
