@@ -314,13 +314,13 @@ export default {
     computed: {
         ...mapGetters('UserCreationModule', ['getUserGeneralDetails', 'getDropDownCompletedVal', 'getUserDropDownValues'])
     },
-    // watch: {
-    //     getDropDownCompletedVal(newVal) {
-    //         if(newVal) {
-    //             this.setAllDropDownVals();
-    //         }
-    //     }
-    // },
+    watch: {
+        getDropDownCompletedVal(newVal) {
+            if(newVal) {
+                this.setAllDropDownVals();
+            }
+        }
+    },
     methods: {
         ...mapActions('UserCreationModule', ['saveUserGeneralDetail']),
         ...mapActions('FileUpload', ['uploadFile', 'getFile']),
