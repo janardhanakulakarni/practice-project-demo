@@ -191,11 +191,11 @@ export default {
         genders: [],
         fieldRules: [
             v => !!v || 'This field is requried',
-            v => v !== null || 'This field is requried',
+            // v => v !== null || 'This field is requried',
         ],
         selectRules: [
             v => !!v || 'One selection is required',
-            v => v !== null || 'One selection is required',
+            // v => v !== null || 'One selection is required',
         ],
         generalDetails: {
             selectedDepartment: '',
@@ -273,7 +273,7 @@ export default {
         },
         onChangeSocialCat() {
             this.socialCategories.forEach((item) => {
-                if (this.selectedSocialCategory === item.id) this.generalDetails.socialCategory = item.name
+                if (this.generalDetails.selectedSocialCategory === item.id) this.generalDetails.socialCategory = item.name
             })
             this.generalDetails.selectedObcSub = '';
             if (this.generalDetails.selectedSocialCategory === 2) this.showObcSubCat = true;
@@ -309,8 +309,14 @@ export default {
             }
         }
     },
+    created() {
+        // this.generalDetails = this.getGeneralDetails;
+    },
     mounted() {
-        this.generalDetails = this.getGeneralDetails;
+        this.$refs.firstNameForm.reset();
+        this.$refs.middleNameForm.reset();
+        this.$refs.lastNameForm.reset();
+        if (this.getDropDownCompletedVal) this.setAllDropDownVals();
     }
 }
 </script>

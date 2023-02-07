@@ -1,5 +1,17 @@
 <template>
     <div style="width: 95vw" class="ma-7">
+      <v-snackbar
+        v-model="showMessage"
+        absolute
+        :min-width="100"
+        :max-width="350"
+        :color="msg.color"
+        centered
+        timeout="5000"
+        top
+      >
+        {{ msg.desc }}
+      </v-snackbar>
         <v-tabs
           v-model="selectedTab"
           background-color="#85B09A"
@@ -68,12 +80,18 @@ export default {
         tabItems: [
           'General Details', 'Contact Details', 'Academic Details', 'Bank Details',
         ],
+        msg: {
+            color: '',
+            desc: '',
+        },
+        showMessage: false,
     }),
     computed: {
-        ...mapGetters('StudentEnrollModule', ['getGeneralDetails'])
+        ...mapGetters('StudentEnrollModule', ['getGeneralDetails', 'getContactDetails', 'getAcademicDetails', 'getBankDetails'])
     },
     methods: {
-      ...mapActions('StudentEnrollModule', ['getDropdownVal', 'dispatchDropdown', 'dropdownSetupCompleted', 'saveGeneralDetail']),
+      ...mapActions('StudentEnrollModule', ['getDropdownVal', 'dispatchDropdown', 'dropdownSetupCompleted', 'saveGeneralDetail', 'enrollStudent', 'destroyStudentData']),
+      ...mapActions('Common', ['startLoading', 'stopLoading']),
       async getAllStudentDropdown() {
         const data = await this.getDropdownVal();
         const arrList = ['dept', 'gender', 'nationality', 'obcsub', 'religion', 'sem', 'social', 'state'];
@@ -88,6 +106,7 @@ export default {
                 else if (item === 'state') {
                   this.setDropDown(data.data.states, 'state');
                   this.dropdownSetupCompleted();
+                  this.stopLoading();
                 }
            });
       },
@@ -116,12 +135,68 @@ export default {
       previousPage() {
         this.selectedTab -= 1;
       },
-      enrollStudentWithDetails() {
+      async enrollStudentWithDetails() {
         console.log('compelete data');
+        const genDetails = this.getGeneralDetails;
+        const contactDetails = this.getContactDetails;
+        console.log(genDetails);
+        // const academicInfo = this.getAcademicDetails;
+        // const bankInfo = this.getBankDetails;
+        const requestBody = {
+          firstName: genDetails.firstName,
+          middleName: genDetails.middleName,
+          lastName: genDetails.lastName,
+          fatherName: genDetails.fatherName,
+          motherName: genDetails.motherName,
+          genderCode: genDetails.selectedGender,
+          gender: genDetails.gender,
+          contactNo: contactDetails.residentialAddress.userPhNum,
+          department: genDetails.department,
+          departmentCode: genDetails.selectedDepartment,
+          nationality: genDetails.nation,
+          religion: genDetails.religion,
+          religionCode: genDetails.selectedReligion,
+          socialCategory: genDetails.socialCategory,
+          socialCategoryCode: genDetails.selectedSocialCategory,
+          obcSubCategoryCode: genDetails.selectedObcSub,
+          obcSubCategory: genDetails.obcSub,
+          residentialAddress: {
+              address: contactDetails.residentialAddress.address,
+              state: contactDetails.residentialAddress.state,
+              stateRef: contactDetails.residentialAddress.selectedState,
+              district: contactDetails.residentialAddress.district,
+              districtRef: contactDetails.residentialAddress.selectedDistrict,
+              city: contactDetails.residentialAddress.city,
+              zipCode: contactDetails.residentialAddress.zipcode
+          },
+          permanentAddress: {
+              address: contactDetails.permanentAddress.address,
+              state: contactDetails.permanentAddress.state,
+              stateRef: contactDetails.permanentAddress.selectedState,
+              districtRef: contactDetails.permanentAddress.selectedDistrict,
+              district: contactDetails.permanentAddress.district,
+              city: contactDetails.permanentAddress.city,
+              zipCode: contactDetails.permanentAddress.zipcode
+          }
+        }
+        console.log('final student data', requestBody);
+        const data = await this.enrollStudent(requestBody);
+        console.log(data);
+        if (data.status === 200) {
+          this.msg.color = 'green';
+          this.msg.desc = data.message;
+          this.showMessage = true;
+          this.stopLoading();
+          this.selectedTab = 0;
+          this.destroyStudentData();
+        }
       }
     },
     created() {
       this.getAllStudentDropdown();
+    },
+    destroyed() {
+      this.destroyStudentData('clearDropdown');
     }
 }
 </script>

@@ -14,7 +14,7 @@
                     ></v-textarea>
                     <v-text-field
                         class="mt-2"
-                        label="User mobile number"
+                        label="Parent mobile number"
                         v-model="address.residentialAddress.userPhNum"
                         single-line
                         solo
@@ -82,7 +82,7 @@
                     ></v-textarea>
                     <v-text-field
                         class="mt-2"
-                        label="User mobile number"
+                        label="Parent mobile number"
                         v-model="address.permanentAddress.userPhNum"
                         single-line
                         solo
@@ -213,6 +213,7 @@ export default {
             });
         },
         onSelectState(val) {
+            this.districts = [];
             if (val === 'resAdd') {
                 this.states.forEach((item) => {
                     if(this.address.residentialAddress.selectedState === item.id) {

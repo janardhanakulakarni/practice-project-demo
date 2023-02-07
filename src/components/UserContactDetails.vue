@@ -213,6 +213,7 @@ export default {
             });
         },
         onSelectState(val) {
+            this.districts = [];
             if (val === 'resAdd') {
                 this.states.forEach((item) => {
                     if(this.address.residentialAddress.selectedState === item.id) {

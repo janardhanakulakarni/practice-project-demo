@@ -63,6 +63,18 @@
             </v-card-actions>
         </v-card>
         </v-dialog>
+        <v-snackbar
+              v-model="showMessage"
+              absolute
+              :min-width="100"
+              :max-width="350"
+              :color="msg.color"
+              centered
+              timeout="5000"
+              top
+            >
+              {{ msg.desc }}
+            </v-snackbar>
         <div style="width: 95vw" class="ma-7">
             <v-tabs
             v-model="selectedTab"
@@ -128,6 +140,11 @@ export default {
         tabItems: [
           'General Details', 'Contact Details'
         ],
+        msg: {
+            color: '',
+            desc: '',
+        },
+        showMessage: true,
         // showWarning: false
     }),
     computed: {
@@ -135,6 +152,7 @@ export default {
     },
     methods: {
         ...mapActions('UserCreationModule', ['getDropDownVals', 'dispatchDropdown', 'dropdownSetupCompleted', 'registerUser', 'destroyUserData']),
+        ...mapActions('Common', ['startLoading', 'stopLoading']),
         async getAllDropDownVals() {
            const data = await this.getDropDownVals();
            const arrList = ['dept', 'gender', 'nationality', 'maritalStatus', 'obcsub', 'quali', 'religion', 'role', 'social', 'title', 'state'];
@@ -152,6 +170,7 @@ export default {
                 else if (item === 'title') {
                     this.setDropDown(data.data.title, 'title');
                     this.dropdownSetupCompleted();
+                    this.stopLoading();
                 }
            });
         },
@@ -222,12 +241,13 @@ export default {
                 religionCode: genDetails.selectedReligion,
                 socialCategory: genDetails.socialCategory,
                 socialCategoryCode: genDetails.selectedSocialCategory,
-                obcSubCategory: genDetails.selectedObcSub,
+                obcSubCategoryCode: genDetails.selectedObcSub,
                 obcSubCategory: genDetails.obcSub,
                 residentialAddress: {
                     address: contactDetails.residentialAddress.address,
                     state: contactDetails.residentialAddress.state,
                     stateRef: contactDetails.residentialAddress.selectedState,
+                    district: contactDetails.residentialAddress.district,
                     districtRef: contactDetails.residentialAddress.selectedDistrict,
                     city: contactDetails.residentialAddress.city,
                     zipCode: contactDetails.residentialAddress.zipcode
@@ -243,14 +263,21 @@ export default {
                 }
             }
             const data = await this.registerUser(requestBody);
-            console.log(data);
+            if (data.status === 'success') {
+                this.msg.color = 'green';
+                this.msg.desc = data.message;
+                this.showMessage = true;
+                this.stopLoading();
+                this.selectedTab = 0;
+                this.destroyUserData();
+            }
         }
     },
     created() {
         this.getAllDropDownVals();
     },
     destroyed() {
-        this.destroyUserData('all')
+        this.destroyUserData('clearDropdown')
     }
 }
 </script>

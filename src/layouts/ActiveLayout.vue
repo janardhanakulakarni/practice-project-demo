@@ -23,7 +23,7 @@
           v-for="child in item.items"
           :key="child.title"
           :to="child.to"
-          @click="drawer = false"
+          @click="onClickSideNavOpt(child)"
         >
         <v-list-item-icon>
             <v-icon v-text="'mdi-hand-pointing-right'"></v-icon>
@@ -60,11 +60,20 @@
     <v-main>
       <router-view/>
     </v-main>
+    <div class="blocking-container" v-if="getLoadingStatus">
+      <v-progress-circular
+        class="spinner-image"
+        :size="50"
+        color="primary"
+        indeterminate
+      ></v-progress-circular>
+    </div>
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
+import { mapGetters, mapActions } from 'vuex'
 export default {
   name: 'App',
   data: () => ({
@@ -103,12 +112,41 @@ export default {
         },
         {
           action: 'mdi-cog',
-          items: [{ title: 'Logout', to: '/auth/login' }, { title: 'Terms & Conditions' }],
+          items: [{ title: 'Logout' }, { title: 'Terms & Conditions' }],
           title: 'SETTINGS',
         },
       ],
   }),
+  computed: {
+    ...mapGetters('Common', ['getLoading']),
+    get getLoadingStatus() {
+      console.log('printing isLoading', this.getLoading);
+      return this.getLoading
+    }
+  },
   methods: {
+    ...mapActions('UserAuth', ['logout']),
+    onClickSideNavOpt(obj) {
+      this.drawer = false;
+      console.log(obj);
+      if (obj.title === 'Logout')  this.logout();
+    }
   }
 }
 </script>
+<style lang="scss" scoped>
+.blocking-container {
+  position: absolute;
+  top: 0;
+  height: 100vh;
+  width: 100vw;
+  background-color: rgba(128, 128, 128, 0.4);
+  z-index: 9999;
+  .spinner-image {
+    z-index: 9999;
+    position: absolute;
+    top: 47%;
+    left: 50%;
+  }
+}
+</style>

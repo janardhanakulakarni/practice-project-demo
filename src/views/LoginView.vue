@@ -72,7 +72,7 @@
               class="mx-15 my-4"
               width="26vw"
               :elevation="25 - 1"
-              height="42vh"
+              height="28vh"
               style="background-color: 	#85B09A"
             >
             <v-form class="mx-12 pt-2" ref="loginForm" v-model="valid" lazy-validation @submit.prevent="onClickLogin">
@@ -147,11 +147,7 @@ import { validateEmail } from './../utils/validation'
           await this.accountLogin(req)
         } 
       }
-    },
-    created() {
-      localStorage.setItem('username', 'admin@gmail.com');
-      localStorage.setItem('password', '1234567890');
-    },
+    }
   }
 </script>
 <style scoped>

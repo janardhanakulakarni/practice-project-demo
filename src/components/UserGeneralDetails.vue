@@ -314,13 +314,13 @@ export default {
     computed: {
         ...mapGetters('UserCreationModule', ['getUserGeneralDetails', 'getDropDownCompletedVal', 'getUserDropDownValues'])
     },
-    watch: {
-        getDropDownCompletedVal(newVal) {
-            if(newVal) {
-                this.setAllDropDownVals();
-            }
-        }
-    },
+    // watch: {
+    //     getDropDownCompletedVal(newVal) {
+    //         if(newVal) {
+    //             this.setAllDropDownVals();
+    //         }
+    //     }
+    // },
     methods: {
         ...mapActions('UserCreationModule', ['saveUserGeneralDetail']),
         ...mapActions('FileUpload', ['uploadFile', 'getFile']),
@@ -417,7 +417,7 @@ export default {
             if (this.generalDetails.selectedSocialCategory === 2) this.showObcSubCat = true;
             else this.showObcSubCat = false;
             this.socialCategories.forEach((item) => {
-                if (this.selectedSocialCategory === item.id) this.generalDetails.socialCategory = item.name
+                if (this.generalDetails.selectedSocialCategory === item.id) this.generalDetails.socialCategory = item.name
             })
         },
         onSelectDate() {
@@ -437,6 +437,9 @@ export default {
                 }
             }
         },
+    },
+    created() {
+        this.setAllDropDownVals();
     },
     mounted() {
         this.generalDetails = this.getUserGeneralDetails;

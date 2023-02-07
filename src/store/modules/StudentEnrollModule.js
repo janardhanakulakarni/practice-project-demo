@@ -106,10 +106,19 @@ const getters = {
 };
 
 const actions = {
-    async getDropdownVal() {
-        const { data } = await axiosrequest.get('/users/getData')
-        console.log(data);
-        return data;
+    async getDropdownVal({commit}) {
+        try {
+            commit('Common/setLoadingToTrue', null, {root : true});
+            const payload = {
+                screenName: 'userRegistration'
+            }
+            const { data } = await axiosrequest.get('/users/getData', payload)
+            console.log(data);
+            return data;
+        } catch (err) {
+            console.error(err);
+            commit('Common/setLoadingToTrue', null, {root : true});
+        }
     },
     async dispatchDropdown({commit}, payload) {
         commit('setStudentDropDownVal', payload);
@@ -122,10 +131,7 @@ const actions = {
             detailType: 'general',
             data: request
         }
-        console.log(payload);
         commit('setDetail', payload)
-        const data = await axiosrequest.post('/posts')
-        console.log('printing data', data);
     },
     async saveContactDetail({commit}, request){
         const payload = {
@@ -148,13 +154,19 @@ const actions = {
         } 
         commit('setDetail', payload)
     },
-    async saveFinalDetail({commit}, request){ 
-        const payload = {
-            detailType: 'final',
-            data: request
-        } 
-        commit('setDetail', payload)
-    }
+    async enrollStudent({commit}, payload) {
+        try {
+            commit('Common/setLoadingToTrue', null, {root : true});
+            const { data } = await axiosrequest.post('/students/addStudent', payload)
+            return data;
+        } catch (err) {
+            console.error(err);
+            commit('Common/setLoadingToFalse', null, {root : true});
+        }
+    },
+    destroyStudentData({commit}, str = null) {
+        commit('resetStudentData', str);
+    }   
 };
 
 const mutations = {
@@ -177,6 +189,34 @@ const mutations = {
         if (payload.detailType === 'contact') state.contactDetails = payload.data
         if (payload.detailType === 'academic') state.academicDetails = payload.data
         if (payload.detailType === 'bank') state.bankDetails = payload.data
+    },
+    resetStudentData(state, val) {
+        Object.keys(state.generalDetails).forEach((key) => {
+            state.generalDetails[key] = '';
+        });
+        Object.keys(state.contactDetails.residentialAddress).forEach((key) => {
+            state.contactDetails.residentialAddress[key] = '';
+        });
+        Object.keys(state.contactDetails.permanentAddress).forEach((key) => {
+            state.contactDetails.permanentAddress[key] = '';
+        });
+        Object.keys(state.academicDetails).forEach((key) => {
+            state.academicDetails[key] = '';
+        });
+        Object.keys(state.bankDetails).forEach((key) => {
+            state.bankDetails[key] = '';
+        });
+        if (val === 'clearDropdown') {
+            state.departments = [];
+            state.nationality = [];
+            state.religions = [];
+            state.socialCategories = [];
+            state.obcSubCat = [];
+            state.genders = [];
+            state.states = [];
+            state.semesters = [];
+            state.isDropdownSetupCompleted = false;
+        }
     }
 }
 

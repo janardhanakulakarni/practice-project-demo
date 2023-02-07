@@ -38,6 +38,7 @@ import StudentEnrollModule from './modules/StudentEnrollModule'
 import UserCreationModule from './modules/UserCreationModule'
 import UserAuth from './modules/UserAuth'
 import FileUpload  from './modules/FileUpload'
+import Common from './modules/Common'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
@@ -45,6 +46,7 @@ export default new Vuex.Store({
         UserAuth: UserAuth,
         StudentEnrollModule: StudentEnrollModule,
         UserCreationModule: UserCreationModule,
-        FileUpload: FileUpload
+        FileUpload: FileUpload,
+        Common: Common
     }
 })

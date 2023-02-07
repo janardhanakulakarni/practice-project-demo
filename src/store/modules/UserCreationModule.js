@@ -97,13 +97,20 @@ const getters = {
 };
 
 const actions = { 
-    async getDropDownVals() {
-        const payload = {
-            screenName: 'userRegistration'
+    async getDropDownVals({commit}) {
+        try {
+            commit('Common/setLoadingToTrue', null, {root : true});
+            const payload = {
+                screenName: 'userRegistration'
+            }
+            const { data } = await axiosrequest.get('/users/getData', payload)
+            console.log(data);
+            return data;
+        } catch (err) {
+            console.error(err);
+            commit('Common/setLoadingToTrue', null, {root : true});
+        } finally {
         }
-        const { data } = await axiosrequest.get('/users/getData', payload)
-        console.log(data);
-        return data;
     },
     async dispatchDropdown({commit}, payload) {
         commit('setUserDropDownVal', payload);
@@ -127,12 +134,19 @@ const actions = {
         commit('setUserDetail', payload)
     },
     async registerUser({commit}, payload) {
-        const data = await axiosrequest.post('/auth/register', payload)
-        console.log(data.json());
-        return data;
+        try {
+            commit('Common/setLoadingToTrue', null, {root : true});
+            const data = await axiosrequest.post('/auth/register', payload)
+            console.log(data.json());
+            return data;
+        } catch (err) {
+            console.error(err);
+        } finally {
+
+        }
     },
     async destroyUserData({commit}, str) {
-        commit('deleteUserData', str);
+        commit('deleteUserData', str = null);
     }
 };
 
@@ -162,7 +176,16 @@ const mutations = {
         }
     },
     deleteUserData(state, val) {
-        if (val === 'all') {
+        Object.keys(state.generalDetails).forEach((key) => {
+            state.generalDetails[key] = '';
+        });
+        Object.keys(state.contactDetails.residentialAddress).forEach((key) => {
+            state.contactDetails.residentialAddress[key] = '';
+        });
+        Object.keys(state.contactDetails.permanentAddress).forEach((key) => {
+            state.contactDetails.permanentAddress[key] = '';
+        });
+        if (val === 'clearDropdown') {
             state.departments = [];
             state.nationality = [];
             state.religions = [];
@@ -175,8 +198,6 @@ const mutations = {
             state.qualifications = [];
             state.states = [];
             state.isDropdownSetupCompleted = false;
-        } else {
-            console.log('only form data');
         }
     }
 }
