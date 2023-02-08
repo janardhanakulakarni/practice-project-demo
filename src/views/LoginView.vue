@@ -1,6 +1,6 @@
 <template>
   <div align="center" >
-    <div class="mt-14">
+    <div>
       <v-snackbar
               v-model="loginErr"
               absolute
@@ -13,13 +13,13 @@
             >
               {{ 'Entered username or password is invalid' }}
             </v-snackbar>
-      <v-row justify="center" class="mx-12" style="background: #85B09A; height: 85vh">
-        <v-col cols="7">
+      <v-row justify="center" style="background: #85B09A; height: 100vh">
+        <v-col cols="7" style="margin-top:5vh">
           <v-card
             :loading="loading"
             class="ml-4 mt-4"
             min-width="300"
-            height="75vh"
+            height="85vh"
             style="background: #B6B6B6"
             :elevation="25 - 1"
           >
@@ -47,13 +47,13 @@
             </v-card-text>
           </v-card>
         </v-col>
-        <v-col cols="5">
+        <v-col cols="5" style="margin-top: 5vh">
           <v-card
             :elevation="25 - 1"
             :loading="loading"
-            class="mr-1 ml-n10 mt-7 mb-4"
+            class="mr-1 ml-n11 mt-7 mb-4"
             min-width="300"
-            height="75vh"
+            height="85vh"
           >
 
             <!-- <v-row class="ml-4 pt-12" justify="center">
