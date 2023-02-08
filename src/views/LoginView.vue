@@ -140,9 +140,16 @@ import { validateEmail } from './../utils/validation'
       async onClickLogin() {
         if ((this.$refs.loginForm).validate()) {
           console.log(this.login);
+          const base32 = require('hi-base32');
+          const hashedPw = base32.encode(this.login.password);
+          const chunks = [];
+          for (let i = 0; i<hashedPw.length; i += 4 ) {
+            chunks.push(hashedPw.substring(i, i + 4));
+          }
+          const encPW = chunks.join('-');
           const req = {
-            email: 'skilldatatechnologies@gmail.com',
-            password: '$2a$12$rTVL20N1a7h7cWV04maKtOeUPFVlIIlSnSDdrWSwKjPdQACb3ue3m'
+            email: this.login.email,
+            password: encPW
           }
           await this.accountLogin(req)
         } 
