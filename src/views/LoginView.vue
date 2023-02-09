@@ -13,47 +13,49 @@
             >
               {{ 'Entered username or password is invalid' }}
             </v-snackbar>
-      <v-row justify="center" style="background: #85B09A; height: 100vh">
-        <v-col cols="7" style="margin-top:5vh">
+      <v-row justify="center" style="height: 100vh">
+        <v-col cols="7" style="margin-top:1vh">
           <v-card
             :loading="loading"
             class="ml-4 mt-4"
             min-width="300"
-            height="85vh"
-            style="background: #B6B6B6"
+            height="93vh"
             :elevation="25 - 1"
           >
-            <!-- <img
-              style="position: relative; top: 8rem"
-              height="400"
-              width="450"
-              src="./../assets/"
-            /> -->
-            <v-card-text style="position: absolute; bottom: 0">
+            <img
+              height="93%"
+              width="100%"
+              src="./../assets/backgroundimage.png"
+            />
+            <!-- <span><h2> About Us</h2></span>
+            <span><p>Our goal is to be a long-term partner for you.</p></span>
+            <span><p>Our experts will assist in selecting the appropriate system, guide you through the implementatio process and ongoing support for your institution.</p></span>
+            <span><p>This will help to improve finacial management and allow you to focus on the wider picture</p></span> -->
+            <v-card-text style="position: absolute; bottom: 0; background-color: #006064">
               <v-row>
                 <v-col
                   class="text-start mt-2"
                   cols="6"
                 >
-                  <span class="footer-content"><strong>E-IRIS</strong> v1.0</span>
+                  <div class="footer-content"><strong>E-IRIS</strong> v1.0</div>
                 </v-col>
                 <v-col
                   class="text-end mt-2"
                   cols="6"
                 >
-                  <span class="footer-content" style="top: 3px"><strong>All rights reserved @2023</strong></span>
+                  <div class="footer-content" style="top: 3px"><strong>All rights reserved @2023</strong></div>
                 </v-col>
               </v-row>
             </v-card-text>
           </v-card>
         </v-col>
-        <v-col cols="5" style="margin-top: 5vh">
+        <v-col cols="5" style="margin-top:1vh">
           <v-card
             :elevation="25 - 1"
             :loading="loading"
             class="mr-1 ml-n11 mt-7 mb-4"
             min-width="300"
-            height="85vh"
+            height="93vh"
           >
 
             <!-- <v-row class="ml-4 pt-12" justify="center">
@@ -64,16 +66,15 @@
               <span class="ml-5"><h3><strong>E-IRIS</strong></h3><h6><strong>Powered by SKILL-DATA</strong></h6></span>
             </v-row> -->
             <v-row class="pt-12" justify="center">
-              <span><h3><strong>WELCOME TO E-IRIS PORTAL</strong></h3></span>
+              <span><h2><strong>WELCOME TO E-IRIS PORTAL</strong></h2></span>
             </v-row>
             <h4 class="mt-12"><strong>Please login to your account </strong></h4>
             <v-card
               :loading="loading"
-              class="mx-15 my-4"
+              class="mx-15 my-4 login-card"
               width="26vw"
               :elevation="25 - 1"
               height="28vh"
-              style="background-color: 	#85B09A"
             >
             <v-form class="mx-12 pt-2" ref="loginForm" v-model="valid" lazy-validation @submit.prevent="onClickLogin">
               <v-text-field 
@@ -162,4 +163,22 @@ import { validateEmail } from './../utils/validation'
     color: white;
     font-weight: 700;
 }
+.login-card {
+  background-color: #85B09A;
+}
+h2 {
+  color: #004d40
+}
+h4{
+  color: #004d40; 
+  font-family: "Courier";
+  white-space: nowrap;
+  overflow: hidden;
+  font-weight: 900;
+  width: 30rem;
+  animation: type 4s steps(60, end); 
+}
+@keyframes type{ 
+  from { width: 0; } 
+} 
 </style>
