@@ -26,7 +26,7 @@ COPY package*.json ./
 
 # install project dependencies
 RUN npm install
-
+RUN mkdir -p node_modules/.cache && chmod -R 777 node_modules/.cache
 # copy project files and folders to the current working directory (i.e. 'app' folder)
 COPY . .
 
