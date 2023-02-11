@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const baseURL = "https://hippo-nightgown.cyclic.app/api";
+const baseURL = process.env.VUE_APP_API_KEY;
 // const contentType = {
 //     json: 'application/json',
 //     form: 'multipart/form-data',

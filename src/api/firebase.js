@@ -8,13 +8,13 @@ import { getAnalytics } from "firebase/analytics";
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyCbxxbZKlgDeCIAjpQz4ghg3_jCXmca1AQ",
-  authDomain: "practice-iris.firebaseapp.com",
-  projectId: "practice-iris",
-  storageBucket: "practice-iris.appspot.com",
-  messagingSenderId: "357474250689",
-  appId: "1:357474250689:web:baa4aa79b4dcd45b8b4940",
-  measurementId: "G-DFZHMPY3LK"
+  apiKey: process.env.VUE_APP_FIREBASE_API_KEY,
+  authDomain: process.env.VUE_APP_AUTH_DOMAIN,
+  projectId: process.env.VUE_APP_PROJECT_ID,
+  storageBucket: process.env.VUE_APP_STORAGE_BUCKET,
+  messagingSenderId: process.env.VUE_APP_MESSAGING_SENDER_ID,
+  appId: process.env.VUE_APP_APP_ID,
+  measurementId: process.env.VUE_APP_MEASAUREMENT_ID,
 };
 
 // Initialize Firebase

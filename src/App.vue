@@ -116,3 +116,9 @@ export default {
   // }
 }
 </script>
+<style scoped>
+body {
+
+    font-family: 'Nunito Sans';
+}
+</style>

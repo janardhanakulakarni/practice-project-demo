@@ -8,11 +8,16 @@ import HomeView from '../views/HomeView.vue'
 Vue.use(VueRouter)
 
 const routes = [
+  // {
+  //   beforeEnter: (to, from, next) => {
+  //     next({ name: 'login'})
+  //   },
+  //   path: '/',
+  // },
   {
-    beforeEnter: (to, from, next) => {
-      next({ name: 'login'})
-    },
     path: '/',
+    name: 'splashScreen',
+    component: () => import('./../views/SplashScreen.vue'),
   },
   {
     path: '/auth',
@@ -33,9 +38,9 @@ const routes = [
     path: '/user',
     name: 'user',
     component: () => import('./../layouts/ActiveLayout.vue'),
-    beforeEnter: (to, from, next) => {
-      getToken() ? next() : next({ name: 'login'})
-    },
+    // beforeEnter: (to, from, next) => {
+    //   getToken() ? next() : next({ name: 'login'})
+    // },
     children: [
       {
         path: 'home',

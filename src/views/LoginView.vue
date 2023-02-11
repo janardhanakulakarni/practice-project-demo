@@ -16,7 +16,6 @@
       <v-row justify="center" style="height: 100vh">
         <v-col cols="7" style="margin-top:1vh">
           <v-card
-            :loading="loading"
             class="ml-4 mt-4"
             min-width="300"
             height="93vh"
@@ -52,7 +51,6 @@
         <v-col cols="5" style="margin-top:1vh">
           <v-card
             :elevation="25 - 1"
-            :loading="loading"
             class="mr-1 ml-n11 mt-7 mb-4"
             min-width="300"
             height="93vh"
@@ -74,7 +72,7 @@
               class="mx-15 my-4 login-card"
               width="26vw"
               :elevation="25 - 1"
-              height="28vh"
+              max-height="40vh"
             >
             <v-form class="mx-12 pt-2" ref="loginForm" v-model="valid" lazy-validation @submit.prevent="onClickLogin">
               <v-text-field 
@@ -93,15 +91,19 @@
                 @click:append="showPassword = !showPassword"
               ></v-text-field>
             </v-form>
-            <div align="start" class="ml-12 mt-4">
-            <v-btn
-              depressed
-              @click="onClickLogin"
-            >
-              Login
-            </v-btn>
-            <div class="mt-2"><a href="www.google.com" _blank>Forgot Password</a>
-            </div>
+            <div class="pb-3">
+              <div align="start" class="ml-12 mt-4">
+                <v-btn
+                  depressed
+                  @click="onClickLogin"
+                >
+                  Login
+                </v-btn>
+                </div>
+
+                <div align="start" class="ml-12 mt-4">
+                <a href="www.google.com" _blank>Forgot Password</a>
+                </div>
             </div>
             </v-card>
           </v-card>

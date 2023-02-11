@@ -41,7 +41,7 @@
       <v-toolbar-title>Skill Data Tech</v-toolbar-title>
     </v-app-bar>
     
-    <v-footer app>
+    <v-footer app style="background-color: #006064">
       <v-row>
         <v-col
           class="text-start mt-2"
@@ -53,7 +53,7 @@
           class="text-end "
           cols="6"
         >
-          <span class="footer-content" style="top: 3px"><strong>All rights reserved @2023</strong></span>
+          <span class="footer-content" style="position: relative; top: 6px"><strong>All rights reserved @2023</strong></span>
         </v-col>
       </v-row>
     </v-footer>
