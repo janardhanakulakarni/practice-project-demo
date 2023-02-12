@@ -1,5 +1,5 @@
 // const { defineConfig } = require('@vue/cli-service')
-const path = require('path');
+const path = require("path");
 // module.exports = defineConfig({
 //   transpileDependencies: [
 //     'vuetify'
@@ -13,17 +13,18 @@ const path = require('path');
 //   // }
 // })
 module.exports = {
-  chainWebpack: config => {
-    const types = ['vue-modules', 'vue', 'normal-modules', 'normal']
-    types.forEach(type => addStyleResource(config.module.rule('stylus').oneOf(type)))
+  chainWebpack: (config) => {
+    const types = ["vue-modules", "vue", "normal-modules", "normal"];
+    types.forEach((type) =>
+      addStyleResource(config.module.rule("stylus").oneOf(type))
+    );
   },
 };
-function addStyleResource (rule) {
-  rule.use('style-resource')
-    .loader('style-resources-loader')
+function addStyleResource(rule) {
+  rule
+    .use("style-resource")
+    .loader("style-resources-loader")
     .options({
-      patterns: [
-        path.resolve(__dirname, './src/assets/scss/variables.scss'),
-      ],
-    })
+      patterns: [path.resolve(__dirname, "./src/assets/scss/variables.scss")],
+    });
 }

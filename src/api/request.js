@@ -8,29 +8,29 @@ const baseURL = process.env.VUE_APP_API_KEY;
 // };
 
 const axiosInstance = axios.create({
-    baseURL,
-    headers: {
-        'Authorization': `Bearer ${localStorage.getItem("token")}` ,
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
+  baseURL,
+  headers: {
+    Authorization: `Bearer ${localStorage.getItem("token")}`,
+    Accept: "application/json",
+    "Content-Type": "application/json",
+  },
+  transformResponse: [
+    (apiResponse) => {
+      if (apiResponse) {
+        const data = JSON.parse(apiResponse);
+        return data;
+      }
+      return apiResponse;
     },
-    transformResponse: [
-        apiResponse => {
-            if(apiResponse) {
-                const  data  = JSON.parse(apiResponse)
-                return data
-            }
-            return apiResponse
-        }
-    ]
-})
+  ],
+});
 
 const request = {
-    get: (url, body) => axiosInstance.get(url, body),
-    post: (url, body) => axiosInstance.post(url, body),
-    put: (url, body) => axiosInstance.get(url, { body }),
-    patch: (url, body) => axiosInstance.get(url, { body }),
-    del: url => axiosInstance.get(url),
-}
+  get: (url, body) => axiosInstance.get(url, body),
+  post: (url, body) => axiosInstance.post(url, body),
+  put: (url, body) => axiosInstance.get(url, { body }),
+  patch: (url, body) => axiosInstance.get(url, { body }),
+  del: (url) => axiosInstance.get(url),
+};
 
-export default request
+export default request;

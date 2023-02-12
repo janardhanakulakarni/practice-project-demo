@@ -21,7 +21,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 // eslint-disable-next-line
 const analytics = getAnalytics(app);
-import { getStorage } from "firebase/storage"
+import { getStorage } from "firebase/storage";
 const storage = getStorage(app);
 
-export { storage }
+export { storage };

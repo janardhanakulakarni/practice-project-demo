@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-main>
-      <router-view/>
+      <router-view />
     </v-main>
     <div class="blocking-container" v-if="getLoadingStatus">
       <v-progress-circular
@@ -15,19 +15,18 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters } from "vuex";
 export default {
-  name: 'Inactive-layout',
-  data: () => ({
-  }),
-    computed: {
-    ...mapGetters('Common', ['getLoading']),
+  name: "Inactive-layout",
+  data: () => ({}),
+  computed: {
+    ...mapGetters("Common", ["getLoading"]),
     get getLoadingStatus() {
-      console.log('printing isLoading', this.getLoading);
-      return this.getLoading
-    }
+      console.log("printing isLoading", this.getLoading);
+      return this.getLoading;
+    },
   },
-}
+};
 </script>
 <style lang="scss" scoped>
 .blocking-container {

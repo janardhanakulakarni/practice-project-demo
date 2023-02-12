@@ -32,21 +32,21 @@
 //   actions,
 //   mutations
 // })
-import Vue from 'vue'
-import Vuex from 'vuex'
-import StudentEnrollModule from './modules/StudentEnrollModule'
-import UserCreationModule from './modules/UserCreationModule'
-import UserAuth from './modules/UserAuth'
-import FileUpload  from './modules/FileUpload'
-import Common from './modules/Common'
-Vue.use(Vuex)
+import Vue from "vue";
+import Vuex from "vuex";
+import StudentEnrollModule from "./modules/StudentEnrollModule";
+import UserCreationModule from "./modules/UserCreationModule";
+import UserAuth from "./modules/UserAuth";
+import FileUpload from "./modules/FileUpload";
+import Common from "./modules/Common";
+Vue.use(Vuex);
 
 export default new Vuex.Store({
-    modules: {
-        UserAuth: UserAuth,
-        StudentEnrollModule: StudentEnrollModule,
-        UserCreationModule: UserCreationModule,
-        FileUpload: FileUpload,
-        Common: Common
-    }
-})
+  modules: {
+    UserAuth: UserAuth,
+    StudentEnrollModule: StudentEnrollModule,
+    UserCreationModule: UserCreationModule,
+    FileUpload: FileUpload,
+    Common: Common,
+  },
+});

@@ -6,13 +6,12 @@
 <style lang="scss" scoped>
 .bg-screen {
   background-color: #85b09a;
-} 
+}
 </style>
 <script>
 // @ is an alias to /src
 export default {
-  name: 'App',
-  data: () => ({
-   }),
-}
+  name: "App",
+  data: () => ({}),
+};
 </script>

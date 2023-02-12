@@ -1,40 +1,39 @@
 // @import url('https://fonts.googleapis.com/css?family=Nunito');
 * {
-    font-family: system-ui;
-  }
+  font-family: system-ui;
+}
 
 .err-text {
-    color: #ce1126
+  color: #ce1126;
 }
 .warning-text {
-    color: orange;
+  color: orange;
 }
 .field-err-message {
-    color: #ff5252;
-    font-size: 12px;
-    left: 12px;
-    margin-top: 9px;
-    position: relative;
-    top: 4px;
+  color: #ff5252;
+  font-size: 12px;
+  left: 12px;
+  margin-top: 9px;
+  position: relative;
+  top: 4px;
 }
 .label-text {
-    color: #333333;
-    font-weight: 700;
+  color: #333333;
+  font-weight: 700;
 }
 .primary-button {
-    border-radius: 20%;
-    
+  border-radius: 20%;
 }
 .footer-content {
-    font-weight: 300;
-    color: #ffffff;
+  font-weight: 300;
+  color: #ffffff;
 }
 .splash-screen-content {
-    display: flex;
-    justify-content: center;
-    position: relative;
-    top: 10vh
+  display: flex;
+  justify-content: center;
+  position: relative;
+  top: 10vh;
 }
 h2 {
-    color: #004d40
-  }
+  color: #004d40;
+}
