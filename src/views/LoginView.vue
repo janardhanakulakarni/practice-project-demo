@@ -138,14 +138,9 @@ import { validateEmail } from './../utils/validation'
           console.log(this.login);
           const base32 = require('hi-base32');
           const hashedPw = base32.encode(this.login.password);
-          const chunks = [];
-          for (let i = 0; i<hashedPw.length; i += 4 ) {
-            chunks.push(hashedPw.substring(i, i + 4));
-          }
-          const encPW = chunks.join('-');
           const req = {
             email: this.login.email,
-            password: encPW
+            password: hashedPw
           }
           await this.accountLogin(req)
         } 
