@@ -4,6 +4,7 @@
       v-model="drawer"
       app
       width="350"
+      class="drawer-cls"
     >
     <v-list>
       <v-list-group
@@ -11,11 +12,12 @@
         :key="item.title"
         v-model="item.active"
         :prepend-icon="item.action"
+        class="drawerText--text"
         no-action
       >
         <template v-slot:activator>
           <v-list-item-content>
-            <v-list-item-title v-text="item.title"></v-list-item-title>
+            <v-list-item-title  class="drawerText--text" v-text="item.title"></v-list-item-title>
           </v-list-item-content>
         </template>
 
@@ -26,7 +28,7 @@
           @click="onClickSideNavOpt(child)"
         >
         <v-list-item-icon>
-            <v-icon v-text="'mdi-hand-pointing-right'"></v-icon>
+            <v-icon class="drawerText--text" v-text="'mdi-hand-pointing-right'"></v-icon>
           </v-list-item-icon>
           <v-list-item-content class="ml-n6">
             <v-list-item-title v-text="child.title"></v-list-item-title>
@@ -36,27 +38,27 @@
     </v-list>
     </v-navigation-drawer>
 
-    <v-app-bar app>
+    <v-app-bar app class="header-cls">
       <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
-      <v-toolbar-title>Skill Data Tech</v-toolbar-title>
+      <v-toolbar-title>E-IRIS Portal</v-toolbar-title>
     </v-app-bar>
     
-    <v-footer app style="background-color: #006064">
+    <div class="footer-cls">
       <v-row>
         <v-col
-          class="text-start mt-2"
+          class="text-start px-5 mt-1"
           cols="6"
         >
-          <span class="footer-content"><strong>E-IRIS</strong> v1.0</span>
+          <div class="footer-content"><p><strong>E-IRIS</strong> v1.0</p></div>
         </v-col>
         <v-col
-          class="text-end "
+          class="text-end pr-8 mt-1"
           cols="6"
         >
-          <span class="footer-content" style="position: relative; top: 6px"><strong>All rights reserved @2023</strong></span>
+          <span class="footer-content"><p><strong>All rights reserved @2023</strong></p></span>
         </v-col>
       </v-row>
-    </v-footer>
+    </div>
     <v-main>
       <router-view/>
     </v-main>
@@ -148,5 +150,29 @@ export default {
     top: 47%;
     left: 50%;
   }
+}
+.drawer-cls {
+  background: #006064;
+  
+}
+.header-cls {
+  background: #006064;
+  font-size: 900; 
+}
+.footer-cls {
+  position: fixed; 
+  bottom:0; 
+  width: 100vw;
+  font-size: 12px;
+   height: 24px; 
+   background-color: #006064;
+}
+::v-deep .v-toolbar__content, .v-toolbar__extension .v-btn.v-btn--icon.v-size--default {
+    background: #006064;
+    color: #fff;
+    font-weight: 800;
+}
+::v-deep .v-toolbar__content .v-btn.v-btn--icon.v-size--default, .v-toolbar__extension .v-btn.v-btn--icon.v-size--default {
+    color: #fff;
 }
 </style>

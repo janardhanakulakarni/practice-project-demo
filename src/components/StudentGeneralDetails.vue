@@ -155,8 +155,8 @@
                 </v-form>
             </v-col>
         </v-row>
-        <div align="center" class="mt-n3 mb-6">
-        <v-btn @click="compltedFirstStep" large style="background: #85B09A" class="submit-btn-color">Continue</v-btn>
+        <div align="center" class="mt-8 mb-6">
+        <v-btn @click="compltedFirstStep" large color="primary" class="submit-btn-color">Continue</v-btn>
         </div>
     </div>
 </template>

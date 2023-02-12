@@ -16,7 +16,7 @@
       <v-row justify="center" style="height: 100vh">
         <v-col cols="7" style="margin-top:1vh">
           <v-card
-            class="ml-4 mt-4"
+            class="ml-4 mt-4 login-panle1"
             min-width="300"
             height="93vh"
             :elevation="25 - 1"
@@ -24,6 +24,7 @@
             <img
               height="93%"
               width="100%"
+              style="margin-left: -2px"
               src="./../assets/backgroundimage.png"
             />
             <!-- <span><h2> About Us</h2></span>
@@ -51,18 +52,10 @@
         <v-col cols="5" style="margin-top:1vh">
           <v-card
             :elevation="25 - 1"
-            class="mr-1 ml-n11 mt-7 mb-4"
+            class="mr-1 ml-n11 mt-7 mb-4 login-panle2"
             min-width="300"
             height="93vh"
           >
-
-            <!-- <v-row class="ml-4 pt-12" justify="center">
-              <img
-              width="60px"
-              src="./../assets/logo_2.png"
-              />
-              <span class="ml-5"><h3><strong>E-IRIS</strong></h3><h6><strong>Powered by SKILL-DATA</strong></h6></span>
-            </v-row> -->
             <v-row class="pt-12" justify="center">
               <span><h2><strong>WELCOME TO E-IRIS PORTAL</strong></h2></span>
             </v-row>
@@ -182,5 +175,17 @@ h4{
 }
 @keyframes type{ 
   from { width: 0; } 
-} 
+}
+.login-panle1 {
+  border-top-left-radius: 15px;
+  border-bottom-left-radius: 15px;
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+}
+.login-panle2 {
+  border-top-right-radius: 15px;
+  border-bottom-right-radius: 15px;
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+}
 </style>

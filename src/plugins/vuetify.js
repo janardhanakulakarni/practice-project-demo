@@ -12,9 +12,9 @@ export default new Vuetify({
         themes: {
           light: {
             primary: '#006064',
-            secondary: '#b0bec5',
-            accent: '#8c9eff',
-            error: '#b71c1c',
+            previous: '#a52a2a',
+            drawerText: '#E0F7FA',
+            background: '#85b09a',
           },
         },
       },

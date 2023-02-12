@@ -78,7 +78,7 @@
         <div style="width: 95vw" class="ma-7">
             <v-tabs
             v-model="selectedTab"
-            background-color="#85B09A"
+            background-color="#006064"
             centered
             class="tab-radius"
             dark
@@ -115,7 +115,7 @@
   min-height: 60vh;
 }
 ::v-deep .theme--dark.v-tabs > .v-tabs-bar .v-tab:not(.v-tab--active), .theme--dark.v-tabs > .v-tabs-bar .v-tab:not(.v-tab--active) > .v-icon, .theme--dark.v-tabs > .v-tabs-bar .v-tab:not(.v-tab--active) > .v-btn, .theme--dark.v-tabs > .v-tabs-bar .v-tab--disabled {
-    color: #333333;
+    color: #ffffff;
     font-weight: bolder;
 }
 </style>
@@ -154,7 +154,8 @@ export default {
         ...mapActions('UserCreationModule', ['getDropDownVals', 'dispatchDropdown', 'dropdownSetupCompleted', 'registerUser', 'destroyUserData']),
         ...mapActions('Common', ['startLoading', 'stopLoading']),
         async getAllDropDownVals() {
-           const data = await this.getDropDownVals();
+            const data = await this.getDropDownVals();
+            this.stopLoading();
            const arrList = ['dept', 'gender', 'nationality', 'maritalStatus', 'obcsub', 'quali', 'religion', 'role', 'social', 'title', 'state'];
            arrList.forEach((item) => {
                 if (item === 'dept') this.setDropDown(data.data.department, 'dept');

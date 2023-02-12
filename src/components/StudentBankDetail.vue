@@ -26,9 +26,9 @@
                     ></v-text-field>
             </v-col>
         </v-row>
-        <div align="center" class="pt-3">
-        <v-btn @click="goToAcademicDetails" large style="background: brown" class="submit-btn-color mr-5">Previous</v-btn>
-        <v-btn @click="compltedFourthStep" large style="background: #85B09A" class="submit-btn-color">Finish</v-btn>
+        <div align="center" class="mt-8 mb-6">
+        <v-btn @click="goToAcademicDetails" large color="previous" class="submit-btn-color mr-5">Previous</v-btn>
+        <v-btn @click="compltedFourthStep" large color="primary" class="submit-btn-color">Finish</v-btn>
         </div>
     </div>
 </template>

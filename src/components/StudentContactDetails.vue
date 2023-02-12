@@ -135,9 +135,9 @@
                 </v-form>
             </v-col>
         </v-row>
-        <div align="center" class="pt-3">
-        <v-btn @click="goTogeneralDetails" large style="background: brown" class="submit-btn-color mr-5">Previous</v-btn>
-        <v-btn @click="compltedSecondStep" large style="background: #85B09A" class="submit-btn-color">Continue</v-btn>
+        <div align="center" class="mt-8 mb-6">
+        <v-btn @click="goTogeneralDetails" large color="previous" class="submit-btn-color mr-5">Previous</v-btn>
+        <v-btn @click="compltedSecondStep" large color="primary" class="submit-btn-color">Continue</v-btn>
         </div>
     </div>
 </template>

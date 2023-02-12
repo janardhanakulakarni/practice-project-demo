@@ -210,11 +210,11 @@
                     </v-row>
                 </v-form>
             </v-col>
-        <div align="center" class="mt-n3 mb-6">
+        <div align="center" class="mt-8 mb-6">
             <v-btn @click="compltedFirstStep" large style="background: #85B09A" class="submit-btn-color">Continue</v-btn>
         </div>
         </v-row>
-        <div align="start" class="px-16 my-5">
+        <div align="start" class="px-16 my-2">
             <span class="warning-text"><h5>Note: Please remember <strong>EMAIL, USERNAME</strong> and <strong>PASSWORD</strong> to login.</h5></span>
         </div>
     </div>
