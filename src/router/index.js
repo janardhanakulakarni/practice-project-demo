@@ -38,9 +38,9 @@ const routes = [
     path: '/user',
     name: 'user',
     component: () => import('./../layouts/ActiveLayout.vue'),
-    // beforeEnter: (to, from, next) => {
-    //   getToken() ? next() : next({ name: 'login'})
-    // },
+    beforeEnter: (to, from, next) => {
+      getToken() ? next() : next({ name: 'login'})
+    },
     children: [
       {
         path: 'home',
