@@ -159,9 +159,6 @@ export default {
     left: 50%;
   }
 }
-.drawer-cls {
-  background: #006064;
-}
 .header-cls {
   background: #006064;
   font-size: 900;
@@ -183,5 +180,8 @@ export default {
 ::v-deep .v-toolbar__content .v-btn.v-btn--icon.v-size--default,
 .v-toolbar__extension .v-btn.v-btn--icon.v-size--default {
   color: #fff;
+}
+::v-deep .theme--light.v-navigation-drawer {
+  background-color: #006064;
 }
 </style>
