@@ -223,11 +223,11 @@ export default {
       const contactDetails = this.getUserContactDetails;
       const base32 = require("hi-base32");
       const hashedPw = base32.encode(genDetails.password);
-      const chunks = [];
-      for (let i = 0; i < hashedPw.length; i += 4) {
-        chunks.push(hashedPw.substring(i, i + 4));
-      }
-      const encPW = chunks.join("-");
+      //   const chunks = [];
+      //   for (let i = 0; i < hashedPw.length; i += 4) {
+      //     chunks.push(hashedPw.substring(i, i + 4));
+      //   }
+      //   const encPW = chunks.join("-");
       const requestBody = {
         firstName: genDetails.firstName,
         middleName: genDetails.middleName,
@@ -239,7 +239,7 @@ export default {
         gender: genDetails.gender,
         contactNo: contactDetails.residentialAddress.userPhNum,
         email: genDetails.userEmail,
-        password: encPW,
+        password: hashedPw,
         role: genDetails.role,
         roleCode: genDetails.selectedRole,
         maritalStatus: genDetails.mariageStatus,
