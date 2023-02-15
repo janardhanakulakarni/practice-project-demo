@@ -226,13 +226,17 @@ export default {
     },
     compltedThirdStep() {
       if (this.$refs.firstCol.validate() && this.$refs.secondCol.validate()) {
-        this.saveAcademicDetail(this.academicDetails);
+        const academic = JSON.parse(JSON.stringify(this.academicDetails));
+        this.saveAcademicDetail(academic);
         this.$emit("onClickContinue");
       }
     },
     goToContactDetails() {
       this.$emit("onClickPrevious");
     },
+  },
+  created() {
+    console.log("in academics details");
   },
   mounted() {
     this.academicDetails = this.getAcademicDetails;

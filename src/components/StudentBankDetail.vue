@@ -78,12 +78,16 @@ export default {
   methods: {
     ...mapActions("StudentEnrollModule", ["saveBankDetail"]),
     async compltedFourthStep() {
-      await this.saveBankDetail(this.bankDetails);
+      const bankInfo = JSON.parse(JSON.stringify(this.bankDetails));
+      await this.saveBankDetail(bankInfo);
       this.$emit("onClickFinish");
     },
     goToAcademicDetails() {
       this.$emit("onClickPrevious");
     },
+  },
+  created() {
+    console.log("ins bank details");
   },
   mounted() {
     this.bankDetails = this.getBankDetails;

@@ -1,17 +1,73 @@
 <template>
   <div style="width: 95vw" class="ma-7 mt-10">
-    <v-snackbar
-      v-model="showMessage"
-      absolute
-      :min-width="100"
-      :max-width="350"
-      :color="msg.color"
-      centered
-      timeout="5000"
-      top
+    <v-dialog
+      v-model="showEnterStudentId"
+      persistent
+      max-width="600"
+      class="ma-5"
+      overlay-opacity="0.9"
     >
-      {{ msg.desc }}
-    </v-snackbar>
+      <v-card height="100%">
+        <v-card-title class="text-h5">
+          Please enter Student ID to edit student info.
+        </v-card-title>
+        <v-card-text
+          >By clicking <strong>Continue</strong> button you'll get the
+          information of the student there you can edit the
+          details.</v-card-text
+        >
+        <v-card-text class="mt-n5">
+          <v-form
+            ref="studentIdForm"
+            v-model="valid"
+            lazy-validation
+            @submit.prevent="onEnterStudentId"
+          >
+            <v-text-field
+              class="mt-3"
+              label="Student ID"
+              style="max-width: 299px"
+              v-model="enteredStudentId"
+              single-line
+              :rules="studentIdRules"
+              solo
+            ></v-text-field>
+          </v-form>
+        </v-card-text>
+        <v-card-actions class="mt-n10 ml-2">
+          <v-spacer></v-spacer>
+          <v-btn depressed color="previous" to="home" class="popup-btn">
+            Cancel
+          </v-btn>
+          <v-btn @click="onEnterStudentId" color="primary" class="popup-btn"
+            >Continue</v-btn
+          >
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <v-dialog
+      v-model="showSuccessMsg"
+      persistent
+      max-width="600"
+      class="ma-5"
+      overlay-opacity="0.9"
+    >
+      <v-card height="100%">
+        <v-card-title class="text-h5">
+          Student Enrolled Successfully.
+        </v-card-title>
+        <v-card-text>Do you want to enroll other student</v-card-text>
+        <v-card-actions class="mt-n10 ml-2">
+          <v-spacer></v-spacer>
+          <v-btn depressed color="previous" to="home" class="popup-btn">
+            NO
+          </v-btn>
+          <v-btn @click="onClickYes" color="primary" class="popup-btn"
+            >YES</v-btn
+          >
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
     <v-tabs
       v-model="selectedTab"
       background-color="#006064"
@@ -60,6 +116,11 @@
   border-bottom-right-radius: 15px;
   min-height: 47vh;
 }
+.popup-btn {
+  color: #fff;
+  font-weight: 900;
+  height: 30px;
+}
 ::v-deep .theme--dark.v-tabs > .v-tabs-bar .v-tab:not(.v-tab--active),
 .theme--dark.v-tabs > .v-tabs-bar .v-tab:not(.v-tab--active) > .v-icon,
 .theme--dark.v-tabs > .v-tabs-bar .v-tab:not(.v-tab--active) > .v-btn,
@@ -91,11 +152,11 @@ export default {
       "Academic Details",
       "Bank Details",
     ],
-    msg: {
-      color: "",
-      desc: "",
-    },
-    showMessage: false,
+    showSuccessMsg: false,
+    showEnterStudentId: false,
+    enteredStudentId: "",
+    valid: false,
+    studentIdRules: [(v) => !!v || "Student ID is Required"],
   }),
   computed: {
     ...mapGetters("StudentEnrollModule", [
@@ -145,6 +206,8 @@ export default {
           this.setDropDown(data.data.states, "state");
           this.dropdownSetupCompleted();
           this.stopLoading();
+          if (this.$route.query?.editStudent === "YES")
+            this.showEnterStudentId = false;
         }
       });
     },
@@ -218,20 +281,50 @@ export default {
         },
       };
       console.log("final student data", requestBody);
-      const data = await this.enrollStudent(requestBody);
-      console.log(data);
-      if (data.status === 200) {
-        this.msg.color = "green";
-        this.msg.desc = data.message;
-        this.showMessage = true;
-        this.stopLoading();
+      if (this.$route.query.editStudent === "YES") {
+        // const data = await this.patchStudentDetails(requestBody)
+        console.log("calling edit student");
+        this.showEnterStudentId = true;
         this.selectedTab = 0;
-        this.destroyStudentData();
+      } else {
+        const data = await this.enrollStudent(requestBody);
+        console.log(data);
+        if (data.status === 200) {
+          this.showSuccessMsg = true;
+          this.stopLoading();
+          this.destroyStudentData();
+        }
+      }
+    },
+    onClickYes() {
+      location.reload();
+    },
+    onEnterStudentId() {
+      // have to call get all student dropdown and then call get api for student details
+      if (this.$refs.studentIdForm.validate()) {
+        console.log("validated the form");
+        this.getAllStudentDropdown();
       }
     },
   },
   created() {
-    this.getAllStudentDropdown();
+    if (this.$route.query.editStudent === "YES") {
+      this.showEnterStudentId = true;
+    } else {
+      this.getAllStudentDropdown();
+    }
+    /* eslint-disable */
+    this.$watch(
+      () => this.$route.query,
+      (toQuery, previousQuery) => {
+        // react to route changes...
+        if (this.$route.query?.editStudent === "YES") {
+          this.showEnterStudentId = true;
+        } else {
+          this.getAllStudentDropdown();
+        }
+      }
+    );
   },
   destroyed() {
     this.destroyStudentData("clearDropdown");

@@ -60,11 +60,17 @@ const routes = [
           import(/* webpackChunkName: "about" */ "../views/CreateUser.vue"),
       },
       {
-        path: "studentEnroll",
-        name: "studentEnroll",
+        path: "student",
+        name: "student",
         component: () =>
           import(/* webpackChunkName: "about" */ "../views/StudentEnroll.vue"),
       },
+      // {
+      //   path: "student",
+      //   name: "student",
+      //   component: () =>
+      //     import(/* webpackChunkName: "about" */ "../views/EditStudent.vue"),
+      // },
     ],
   },
 ];

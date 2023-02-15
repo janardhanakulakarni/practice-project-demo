@@ -105,8 +105,8 @@ export default {
       {
         action: "mdi-account",
         items: [
-          { title: "Enroll Student", to: "studentEnroll" },
-          { title: "Edit Student Details" },
+          { title: "Enroll Student", to: "student" },
+          { title: "Edit Student Details", to: "student?editStudent=YES" },
         ],
         title: "STUDENT MANAGEMENT",
       },

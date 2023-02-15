@@ -347,7 +347,7 @@ export default {
       this.showCalander = false;
     },
     compltedFirstStep() {
-      // this.$emit('onClickContinue');
+      // this.$emit("onClickContinue");
       // this.$store.dispatch.saveGeneralDetail(this.generalDetails);
       if (
         this.$refs.firstNameForm.validate() &&
@@ -361,7 +361,8 @@ export default {
           this.showDOBerr = true;
         else {
           console.log("complted 1st step");
-          this.saveGeneralDetail(this.generalDetails);
+          const genDetails = JSON.parse(JSON.stringify(this.generalDetails));
+          this.saveGeneralDetail(genDetails);
           this.$emit("onClickContinue");
         }
       }
@@ -369,12 +370,7 @@ export default {
   },
   created() {
     // this.generalDetails = this.getGeneralDetails;
-  },
-  mounted() {
-    this.$refs.firstNameForm.reset();
-    this.$refs.middleNameForm.reset();
-    this.$refs.lastNameForm.reset();
-    if (this.getDropDownCompletedVal) this.setAllDropDownVals();
+    console.log("hellow");
   },
 };
 </script>

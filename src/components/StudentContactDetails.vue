@@ -294,7 +294,8 @@ export default {
     },
     compltedSecondStep() {
       if (this.$refs.firstCol.validate() && this.$refs.secondCol.validate()) {
-        this.saveContactDetail(this.address);
+        const address = JSON.parse(JSON.stringify(this.address));
+        this.saveContactDetail(address);
         this.$emit("onClickContinue");
       }
     },
@@ -307,6 +308,7 @@ export default {
   },
   mounted() {
     this.address = this.getContactDetails;
+    console.log("on mounted using eager");
   },
 };
 </script>
